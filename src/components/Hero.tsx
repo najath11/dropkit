@@ -11,13 +11,52 @@ const avatars = [
   "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100"
 ];
 
+const slides = [
+  {
+    title1: "REIMAGINED",
+    title2: "KIT CULTURE",
+    title2Color: "text-[#E6B022]",
+    subtitle: "Kit Evolved.\nHeritage Perfected.",
+    description: "Engineered For Performance,\nStyled For Life. Every Thread Counts.",
+    imageDesktop: "/assets/hero_barca.png",
+    imageMobile: "/assets/hero_barca.png",
+    imageClass: "object-contain md:object-cover scale-110 md:scale-[1.3] translate-y-4 md:translate-y-0 mix-blend-screen",
+    discount: "Kit Drop 30%",
+    discountDesc: "For All New Club Jersey Collection",
+    tags: []
+  },
+  {
+    title1: "ENGINEERED VICTORY",
+    title2: "LEGENDARY STYLE",
+    title2Color: "text-[#D00027]",
+    subtitle: "Premium Design.\nUltimate Performance.",
+    description: "Built for Champions.\nWear the Badge.",
+    imageDesktop: "/assets/liverpool_clean_desktop.png",
+    imageMobile: "/assets/liverpool_clean_mobile.png",
+    imageClass: "object-contain md:object-cover scale-110 md:scale-[1.3] translate-y-4 md:translate-y-0 mix-blend-screen",
+    discount: "Limited Edition",
+    discountDesc: "Authentic Match Day Collection",
+    tags: ["Authentic", "Limited Edition"]
+  }
+];
+
 export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 150);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(slideTimer);
+  }, []);
+
+  const slide = slides[currentSlide];
 
   return (
     <section className="relative w-full h-full flex flex-col justify-between bg-transparent flex-grow pt-28 pb-6 md:pt-32 md:pb-8 min-h-[600px] overflow-hidden">
@@ -35,39 +74,53 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs 
         }`}
       >
         {/* Left Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:left-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-8 md:mb-0">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight text-white">
-            REIMAGINED
+        <div className="w-full md:absolute md:left-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-8 md:mb-0 transition-opacity duration-700" key={`title-${currentSlide}`}>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight text-white animate-fade-in-up">
+            {slide.title1}
           </h1>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight text-[#E6B022]">
-            KIT CULTURE
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight ${slide.title2Color} animate-fade-in-up delay-75`}>
+            {slide.title2}
           </h2>
-          <div className="mt-5 text-left">
-            <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest leading-relaxed">
-              Kit Evolved.<br />
-              Heritage Perfected.
+          <div className="mt-5 text-left animate-fade-in-up delay-150">
+            <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest leading-relaxed whitespace-pre-line">
+              {slide.subtitle}
             </p>
           </div>
         </div>
 
         {/* Center Image Visual */}
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center z-0 pointer-events-none">
-          <img 
-            src="/assets/hero_barca.png" 
-            alt="FC Barcelona Blaugrana Edition Mannequin Torso and Football Player Composition"
-            loading="eager"
-            fetchPriority="high"
-            className="w-full h-full object-contain md:object-cover scale-110 md:scale-[1.3] translate-y-4 md:translate-y-0 mix-blend-screen"
-          />
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center z-0 pointer-events-none transition-opacity duration-1000" key={`image-${currentSlide}`}>
+          <picture className={`w-full h-full animate-fade-in ${slide.imageClass}`}>
+            <source media="(min-width: 768px)" srcSet={slide.imageDesktop} />
+            <img 
+              src={slide.imageMobile} 
+              alt="Hero Banner"
+              loading="eager"
+              fetchPriority="high"
+              className="w-full h-full object-cover md:object-contain"
+            />
+          </picture>
         </div>
 
         {/* Right Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:right-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-4 md:mt-0">
-          <p className="text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs">
-            Engineered For Performance,<br />Styled For Life. Every Thread Counts.
+        <div className="w-full md:absolute md:right-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-4 md:mt-0" key={`right-${currentSlide}`}>
+          
+          {/* Top Right Tags */}
+          {slide.tags.length > 0 && (
+            <div className="flex gap-2 mb-4 animate-fade-in-up">
+              {slide.tags.map((tag, i) => (
+                <span key={i} className="px-3 py-1 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[9px] uppercase tracking-widest font-bold rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <p className="text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs whitespace-pre-line animate-fade-in-up delay-75">
+            {slide.description}
           </p>
           
-          <div className="flex items-center gap-2.5 mt-5 justify-start md:justify-end">
+          <div className="flex items-center gap-2.5 mt-5 justify-start md:justify-end animate-fade-in-up delay-150">
             <button 
               onClick={onExploreSpecs}
               className="px-5 py-2 bg-white text-black hover:bg-neutral-200 hover:scale-105 active:scale-95 transition-all duration-300 font-extrabold rounded-full text-[10px] uppercase tracking-wider shadow-md cursor-pointer"
@@ -88,16 +141,30 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs 
             </button>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 animate-fade-in-up delay-200">
             <h4 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display text-white uppercase tracking-wider leading-none">
-              Kit Drop 30%
+              {slide.discount}
             </h4>
             <p className="text-[9px] sm:text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-2 font-mono">
-              For All New Club Jersey Collection
+              {slide.discountDesc}
             </p>
           </div>
         </div>
 
+      </div>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-28 md:bottom-32 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentSlide(idx)}
+            className={`w-12 h-1 rounded-full transition-all duration-500 cursor-pointer ${
+              idx === currentSlide ? 'bg-white scale-y-150' : 'bg-white/30 hover:bg-white/50'
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
       </div>
 
       {/* Bottom Row */}

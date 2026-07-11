@@ -28,7 +28,8 @@ export const products: Product[] = [
       { name: 'Carbon Black & Gold', hex: '#1E1E1E' }
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    image: '/assets/jersey_football_madrid.png'
+    image: '/assets/jersey_football_madrid_front.png',
+    backImage: '/assets/jersey_football_madrid_back.png'
   },
   {
     id: 'js-02',
