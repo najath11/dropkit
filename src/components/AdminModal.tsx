@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Unlock, ShoppingBag, Plus, Trash2, Image as ImageIcon, Check } from 'lucide-react';
+import { X, Lock, Unlock, ShoppingBag, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 import type { Product } from '../types';
 
 interface AdminModalProps {
@@ -10,68 +10,190 @@ interface AdminModalProps {
   onDeleteProduct: (id: string) => void;
 }
 
-const libraryImages = [
-  {
-    id: 'lib-1',
-    name: 'Obsidian Navy (Front)',
-    url: 'https://images.unsplash.com/photo-151746972996-4e0b0f43e01a?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  },
-  {
-    id: 'lib-2',
-    name: 'Classic White (Front)',
-    url: 'https://images.unsplash.com/photo-1541813714-f57016d2f2ec?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  },
-  {
-    id: 'lib-3',
-    name: 'Stealth Black (Front)',
-    url: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  },
-  {
-    id: 'lib-4',
-    name: 'Crimson Red (Front)',
-    url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  },
-  {
-    id: 'lib-5',
-    name: 'Sunset Yellow (Front)',
-    url: 'https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  },
-  {
-    id: 'lib-6',
-    name: 'Deep Blue (Back)',
-    url: 'https://images.unsplash.com/photo-1579952362224-303b762e152f?auto=format&fit=crop&q=80&w=800',
-    type: 'back'
-  },
-  {
-    id: 'lib-7',
-    name: 'Midnight Black (Back)',
-    url: 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&q=80&w=800',
-    type: 'back'
-  },
-  {
-    id: 'lib-8',
-    name: 'Classic White (Back)',
-    url: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&q=80&w=800',
-    type: 'back'
-  },
-  {
-    id: 'lib-9',
-    name: 'Crimson Red (Back)',
-    url: 'https://images.unsplash.com/photo-1518063319789-7217e6706b04?auto=format&fit=crop&q=80&w=800',
-    type: 'back'
-  },
-  {
-    id: 'lib-10',
-    name: 'Azzurri Stadium (Front)',
-    url: 'https://images.unsplash.com/photo-1431324155629-1a6edd1dec8d?auto=format&fit=crop&q=80&w=800',
-    type: 'front'
-  }
-];
+interface CropperModalProps {
+  src: string;
+  onCancel: () => void;
+  onSave: (croppedDataUrl: string) => void;
+}
+
+const CropperModal: React.FC<CropperModalProps> = ({ src, onCancel, onSave }) => {
+  const [zoom, setZoom] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0, initW: 0, initH: 0 });
+
+  const containerW = 300;
+  const containerH = 400;
+
+  // Load image to get dimensions
+  const [imgElement, setImgElement] = useState<HTMLImageElement | null>(null);
+
+  React.useEffect(() => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      let initW = 0;
+      let initH = 0;
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const containerRatio = containerW / containerH; // 3/4 = 0.75
+
+      if (imgRatio > containerRatio) {
+        // Image is wider than portrait container -> fit height, let width overflow
+        initH = containerH;
+        initW = containerH * imgRatio;
+      } else {
+        // Image is taller -> fit width, let height overflow
+        initW = containerW;
+        initH = containerW / imgRatio;
+      }
+
+      setImageSize({
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+        initW,
+        initH
+      });
+      // Center the image initially
+      setPanX((containerW - initW) / 2);
+      setPanY((containerH - initH) / 2);
+      setImgElement(img);
+    };
+  }, [src]);
+
+  const handleStart = (clientX: number, clientY: number) => {
+    setIsDragging(true);
+    setStartX(clientX - panX);
+    setStartY(clientY - panY);
+  };
+
+  const handleMove = (clientX: number, clientY: number) => {
+    if (!isDragging) return;
+    setPanX(clientX - startX);
+    setPanY(clientY - startY);
+  };
+
+  const handleEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleCrop = () => {
+    if (!imgElement) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 800;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Fill background with black
+    ctx.fillStyle = '#08090b';
+    ctx.fillRect(0, 0, 600, 800);
+
+    // Draw the image scaled up by 2x (since canvas is 600x800 and preview is 300x400)
+    ctx.drawImage(
+      imgElement,
+      panX * 2,
+      panY * 2,
+      imageSize.initW * zoom * 2,
+      imageSize.initH * zoom * 2
+    );
+
+    const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    onSave(croppedDataUrl);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
+      
+      {/* Cropper Container */}
+      <div className="relative z-10 w-full max-w-md bg-[#0e121f] border border-white/10 rounded-[28px] p-6 flex flex-col items-center gap-6 shadow-2xl">
+        <div className="text-center space-y-1">
+          <h4 className="font-display uppercase text-sm text-white">Crop Jersey Photo</h4>
+          <p className="text-[9px] text-neutral-400 font-mono">DRAG TO PAN • SLIDE TO ZOOM</p>
+        </div>
+
+        {/* Viewport Box (300x400) */}
+        <div 
+          className="relative w-[300px] h-[400px] border border-white/20 rounded-xl overflow-hidden bg-black cursor-move select-none"
+          onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+          onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={(e) => {
+            if (e.touches[0]) handleStart(e.touches[0].clientX, e.touches[0].clientY);
+          }}
+          onTouchMove={(e) => {
+            if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+          }}
+          onTouchEnd={handleEnd}
+        >
+          {imgElement && (
+            <img
+              src={src}
+              alt="Cropping visual"
+              draggable={false}
+              className="absolute pointer-events-none select-none max-w-none origin-top-left"
+              style={{
+                left: `${panX}px`,
+                top: `${panY}px`,
+                width: `${imageSize.initW * zoom}px`,
+                height: `${imageSize.initH * zoom}px`
+              }}
+            />
+          )}
+          {/* Aspect Ratio 3:4 Helper Grid Overlays */}
+          <div className="absolute inset-0 border border-[#EAEF30]/40 rounded-xl pointer-events-none" />
+          <div className="absolute inset-x-0 top-1/3 border-b border-white/10 pointer-events-none" />
+          <div className="absolute inset-x-0 top-2/3 border-b border-white/10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-1/3 border-r border-white/10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-2/3 border-r border-white/10 pointer-events-none" />
+        </div>
+
+        {/* Zoom Slider */}
+        <div className="w-full space-y-1.5 px-4">
+          <div className="flex justify-between text-[9px] font-mono text-neutral-400">
+            <span>ZOOM</span>
+            <span>{Math.round(zoom * 100)}%</span>
+          </div>
+          <input
+            type="range"
+            min="1"
+            max="3"
+            step="0.05"
+            value={zoom}
+            onChange={(e) => {
+              const nextZoom = parseFloat(e.target.value);
+              setPanX((prev) => prev - (imageSize.initW * (nextZoom - zoom)) / 2);
+              setPanY((prev) => prev - (imageSize.initH * (nextZoom - zoom)) / 2);
+              setZoom(nextZoom);
+            }}
+            className="w-full accent-[#EAEF30]"
+          />
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-3 w-full px-4">
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCrop}
+            className="flex-1 py-2 bg-[#EAEF30] text-black hover:opacity-90 text-[10px] font-bold uppercase tracking-wider rounded-lg cursor-pointer"
+          >
+            Apply Crop
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const AdminModal: React.FC<AdminModalProps> = ({
   isOpen,
@@ -93,8 +215,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [backImage, setBackImage] = useState('');
   const [description, setDescription] = useState('');
 
-  // Active library picker state
-  const [activePickerTarget, setActivePickerTarget] = useState<'front' | 'back' | null>(null);
+  // Active cropping picker state
+  const [croppingSrc, setCroppingSrc] = useState<string | null>(null);
+  const [croppingTarget, setCroppingTarget] = useState<'front' | 'back' | null>(null);
 
   if (!isOpen) return null;
 
@@ -108,20 +231,42 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     }
   };
 
-  const handleSelectFromLibrary = (url: string) => {
-    if (activePickerTarget === 'front') {
-      setImage(url);
-    } else if (activePickerTarget === 'back') {
-      setBackImage(url);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, target: 'front' | 'back') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setCroppingSrc(reader.result);
+          setCroppingTarget(target);
+        }
+      };
+      reader.readAsDataURL(file);
     }
-    setActivePickerTarget(null);
+  };
+
+  const handleSaveCrop = (croppedUrl: string) => {
+    if (croppingTarget === 'front') {
+      setImage(croppedUrl);
+    } else if (croppingTarget === 'back') {
+      setBackImage(croppedUrl);
+    }
+    setCroppingSrc(null);
+    setCroppingTarget(null);
+  };
+
+  const handleRemovePhoto = (target: 'front' | 'back') => {
+    if (target === 'front') {
+      setImage('');
+    } else {
+      setBackImage('');
+    }
   };
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !price) return;
 
-    // Use default Unsplash athletic stock photo if no image provided
     const defaultFrontImg = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=800';
     
     const newProduct: Product = {
@@ -300,69 +445,99 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   </div>
                 </div>
 
-                {/* Photo Selectors */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Device Image Selectors & Crop Option */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                   
-                  {/* Front Image Picker */}
+                  {/* Front Photo Picker */}
                   <div className="space-y-1.5">
-                    <label className="block font-mono text-[9px] uppercase tracking-wider text-neutral-400">
-                      Front Image *
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                        placeholder="Paste URL or select from Library"
-                        className="flex-grow bg-black/60 border border-white/10 px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-white rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setActivePickerTarget('front')}
-                        className="px-3 bg-white/5 border border-white/10 text-neutral-300 hover:text-white hover:bg-white/10 transition-all text-[10px] font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 cursor-pointer shrink-0"
-                      >
-                        <ImageIcon size={12} /> Library
-                      </button>
-                    </div>
-                    {image && (
-                      <div className="flex items-center gap-1.5 pt-1">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                        <span className="text-[8px] font-mono text-neutral-400 truncate max-w-[200px]">Photo Loaded</span>
+                    <span className="block font-mono text-[9px] uppercase tracking-wider text-neutral-400">
+                      Front Photo *
+                    </span>
+                    {!image ? (
+                      <div className="flex flex-col items-center justify-center border border-dashed border-white/20 rounded-xl p-6 bg-black/40 hover:bg-black/60 hover:border-white/40 transition-all cursor-pointer relative group aspect-[3/2.2]">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={(e) => handleFileChange(e, 'front')} 
+                          className="absolute inset-0 opacity-0 cursor-pointer" 
+                        />
+                        <ImageIcon className="text-neutral-400 group-hover:text-white transition-colors mb-2" size={20} />
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-300 font-bold text-center">Select Front Jersey Photo</span>
+                        <span className="text-[7px] text-neutral-500 mt-1 font-mono text-center">Click to open device gallery / library</span>
+                      </div>
+                    ) : (
+                      <div className="relative border border-white/10 rounded-xl overflow-hidden aspect-[4/3] max-w-[200px] bg-black/40 group">
+                        <img src={image} alt="Front Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1.5 transition-all">
+                          <div className="relative">
+                            <button type="button" className="px-2.5 py-1 bg-white text-black font-extrabold uppercase tracking-wider text-[8px] rounded-md hover:bg-neutral-200 cursor-pointer">
+                              Replace
+                            </button>
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={(e) => handleFileChange(e, 'front')} 
+                              className="absolute inset-0 opacity-0 cursor-pointer" 
+                            />
+                          </div>
+                          <button 
+                            type="button"
+                            onClick={() => handleRemovePhoto('front')}
+                            className="px-2.5 py-1 bg-red-500/20 text-red-400 border border-red-500/30 font-extrabold uppercase tracking-wider text-[8px] rounded-md hover:bg-red-500 hover:text-white cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Back Image Picker */}
+                  {/* Back Photo Picker */}
                   <div className="space-y-1.5">
-                    <label className="block font-mono text-[9px] uppercase tracking-wider text-neutral-400">
-                      Back Image (Optional)
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={backImage}
-                        onChange={(e) => setBackImage(e.target.value)}
-                        placeholder="Paste URL or select from Library"
-                        className="flex-grow bg-black/60 border border-white/10 px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-white rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setActivePickerTarget('back')}
-                        className="px-3 bg-white/5 border border-white/10 text-neutral-300 hover:text-white hover:bg-white/10 transition-all text-[10px] font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 cursor-pointer shrink-0"
-                      >
-                        <ImageIcon size={12} /> Library
-                      </button>
-                    </div>
-                    {backImage && (
-                      <div className="flex items-center gap-1.5 pt-1">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                        <span className="text-[8px] font-mono text-neutral-400 truncate max-w-[200px]">Back Photo Loaded</span>
+                    <span className="block font-mono text-[9px] uppercase tracking-wider text-neutral-400">
+                      Back Photo (Optional)
+                    </span>
+                    {!backImage ? (
+                      <div className="flex flex-col items-center justify-center border border-dashed border-white/20 rounded-xl p-6 bg-black/40 hover:bg-black/60 hover:border-white/40 transition-all cursor-pointer relative group aspect-[3/2.2]">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={(e) => handleFileChange(e, 'back')} 
+                          className="absolute inset-0 opacity-0 cursor-pointer" 
+                        />
+                        <ImageIcon className="text-neutral-400 group-hover:text-white transition-colors mb-2" size={20} />
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-300 font-bold text-center">Select Back Jersey Photo</span>
+                        <span className="text-[7px] text-neutral-500 mt-1 font-mono text-center">Enables automatic 5s front/back flip</span>
+                      </div>
+                    ) : (
+                      <div className="relative border border-white/10 rounded-xl overflow-hidden aspect-[4/3] max-w-[200px] bg-black/40 group">
+                        <img src={backImage} alt="Back Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1.5 transition-all">
+                          <div className="relative">
+                            <button type="button" className="px-2.5 py-1 bg-white text-black font-extrabold uppercase tracking-wider text-[8px] rounded-md hover:bg-neutral-200 cursor-pointer">
+                              Replace
+                            </button>
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={(e) => handleFileChange(e, 'back')} 
+                              className="absolute inset-0 opacity-0 cursor-pointer" 
+                            />
+                          </div>
+                          <button 
+                            type="button"
+                            onClick={() => handleRemovePhoto('back')}
+                            className="px-2.5 py-1 bg-red-500/20 text-red-400 border border-red-500/30 font-extrabold uppercase tracking-wider text-[8px] rounded-md hover:bg-red-500 hover:text-white cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div>
+                <div className="pt-2">
                   <label className="block font-mono text-[9px] uppercase tracking-wider text-neutral-400 mb-1">
                     Product Description
                   </label>
@@ -388,7 +563,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <h3 className="font-display uppercase text-base text-white border-b border-white/5 pb-2 flex items-center gap-2">
                   <ShoppingBag size={16} className="text-[#EAEF30]" /> Manage Catalog ({products.length} Products)
                 </h3>
-                <div className="max-h-[22vh] overflow-y-auto space-y-2 pr-1 border border-white/5 bg-black/20 p-2 rounded-xl">
+                <div className="max-h-[22vh] overflow-y-auto space-y-2 pr-1 border border-white/5 bg-black/20 p-2 rounded-xl font-sans">
                   {products.map((p) => {
                     const isCustom = p.id.startsWith('custom-');
                     return (
@@ -436,64 +611,16 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
       </div>
 
-      {/* Image Library Picker Bottom Sheet / Slide-up Overlay */}
-      {activePickerTarget && (
-        <div className="fixed inset-0 z-[110] flex items-end justify-center p-4 sm:p-6">
-          <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
-            onClick={() => setActivePickerTarget(null)}
-          />
-          <div className="relative z-10 w-full max-w-lg bg-[#0e121f] border border-white/10 rounded-t-[24px] p-5 shadow-2xl space-y-4 max-h-[60vh] overflow-y-auto animate-slide-up">
-            <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <div className="flex items-center gap-2">
-                <ImageIcon size={15} className="text-[#EAEF30]" />
-                <h4 className="font-display uppercase text-sm text-white">
-                  Select {activePickerTarget === 'front' ? 'Front' : 'Back'} Image Template
-                </h4>
-              </div>
-              <button 
-                onClick={() => setActivePickerTarget(null)}
-                className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer"
-              >
-                <X size={12} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {libraryImages
-                .filter((item) => item.type === activePickerTarget)
-                .map((item) => {
-                  const isSelected = activePickerTarget === 'front' ? image === item.url : backImage === item.url;
-                  return (
-                    <div 
-                      key={item.id}
-                      onClick={() => handleSelectFromLibrary(item.url)}
-                      className={`group relative bg-black/40 border rounded-xl overflow-hidden cursor-pointer transition-all aspect-[4/3] flex flex-col justify-end p-2 ${
-                        isSelected ? 'border-[#EAEF30] scale-[1.02]' : 'border-white/5 hover:border-white/20'
-                      }`}
-                    >
-                      <img 
-                        src={item.url} 
-                        alt={item.name} 
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-                      
-                      {isSelected && (
-                        <div className="absolute top-2 right-2 w-5 h-5 bg-[#EAEF30] rounded-full flex items-center justify-center text-black shadow-md z-10 animate-scale-in">
-                          <Check size={12} strokeWidth={3} />
-                        </div>
-                      )}
-                      
-                      <span className="relative z-10 text-[9px] font-mono text-white font-bold leading-none select-none truncate">
-                        {item.name}
-                      </span>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-        </div>
+      {/* Image Cropper Modal */}
+      {croppingSrc && (
+        <CropperModal
+          src={croppingSrc}
+          onCancel={() => {
+            setCroppingSrc(null);
+            setCroppingTarget(null);
+          }}
+          onSave={handleSaveCrop}
+        />
       )}
     </div>
   );
