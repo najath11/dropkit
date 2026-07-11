@@ -162,11 +162,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   );
 };
 
-export const ProductCollection: React.FC<ProductCollectionProps> = () => {
+export const ProductCollection: React.FC<ProductCollectionProps & { products?: Product[] }> = ({ products: customProducts }) => {
   const { addToCart } = useCart();
   const [filter, setFilter] = useState<'all' | 'club' | 'intl'>('all');
 
-  const filteredProducts = products.filter((product) => {
+  const itemsToDisplay = customProducts || products;
+
+  const filteredProducts = itemsToDisplay.filter((product) => {
     if (filter === 'all') return true;
     return product.category === filter;
   });

@@ -6,9 +6,10 @@ interface HeaderProps {
   onOpenSizeGuide: () => void;
   onOpenSpecs: () => void;
   onOpenCollection: () => void;
+  onOpenAdmin: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenCollection }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin }) => {
   const { cartCount, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -78,6 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection }) => {
 
           {/* User Icon Button */}
           <button 
+            onClick={onOpenAdmin}
             className="w-9 h-9 rounded-full border border-white/15 bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer"
             aria-label="User Account"
           >

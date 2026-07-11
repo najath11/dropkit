@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -9,8 +10,36 @@ import { SizeGuide } from './components/SizeGuide';
 import { EarlyAccess } from './components/EarlyAccess';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
+import { AdminModal } from './components/AdminModal';
+import { products } from './data/products';
+import type { Product } from './types';
 
 function MainApp() {
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [allProducts, setAllProducts] = useState<Product[]>(() => {
+    const saved = localStorage.getItem('dropkit_products');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return products;
+  });
+
+  const handleAddProduct = (newProduct: Product) => {
+    const updated = [newProduct, ...allProducts];
+    setAllProducts(updated);
+    localStorage.setItem('dropkit_products', JSON.stringify(updated));
+  };
+
+  const handleDeleteProduct = (id: string) => {
+    const updated = allProducts.filter((p) => p.id !== id);
+    setAllProducts(updated);
+    localStorage.setItem('dropkit_products', JSON.stringify(updated));
+  };
+
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -30,6 +59,7 @@ function MainApp() {
           onOpenSizeGuide={() => scrollTo('sizing-authenticity')}
           onOpenSpecs={() => handleOpenSpecs()}
           onOpenCollection={() => scrollTo('collection')}
+          onOpenAdmin={() => setIsAdminOpen(true)}
         />
         
         <Hero 
@@ -40,6 +70,7 @@ function MainApp() {
       
       <main className="flex-grow flex flex-col gap-6 md:gap-8 w-full">
         <ProductCollection 
+          products={allProducts}
           onOpenSpecs={handleOpenSpecs}
           onOpenSizeGuide={() => scrollTo('sizing-authenticity')}
         />
@@ -60,6 +91,14 @@ function MainApp() {
       />
 
       <CartDrawer />
+
+      <AdminModal 
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        products={allProducts}
+        onAddProduct={handleAddProduct}
+        onDeleteProduct={handleDeleteProduct}
+      />
     </div>
   );
 }
