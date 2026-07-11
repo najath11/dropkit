@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, LogOut, Settings, Shield } from 'lucide-react';
 import { navigate } from '../utils/router';
 
 interface HeaderProps {
@@ -14,11 +14,16 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAuth }) => {
   const { cartCount, setIsCartOpen } = useCart();
-  const { user, isLoggedIn, isAdmin } = useAuth();
+  const { user, isLoggedIn, isAdmin, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const handleUserClick = () => {
-    onOpenAuth();
+    if (isLoggedIn) {
+      setIsUserMenuOpen(!isUserMenuOpen);
+    } else {
+      onOpenAuth();
+    }
   };
 
   // Get user initials
@@ -111,28 +116,79 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAuth }) 
             )}
           </button>
 
-          {/* User Icon / Avatar Button */}
-          <button 
-            onClick={handleUserClick}
-            className={`w-9 h-9 rounded-full border backdrop-blur-md flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer relative ${
-              isLoggedIn
-                ? isAdmin
-                  ? 'border-[#EAEF30]/40 bg-[#EAEF30]/10 text-[#EAEF30]'
-                  : 'border-white/20 bg-white/10 text-white'
-                : 'border-white/15 bg-black/40 text-white hover:bg-white/10'
-            }`}
-            aria-label="User Account"
-          >
-            {isLoggedIn && user ? (
-              <span className="text-[10px] font-bold uppercase">{getInitials(user.name)}</span>
-            ) : (
-              <User size={16} strokeWidth={1.5} />
+          {/* User Icon / Avatar Wrapper */}
+          <div className="relative">
+            <button 
+              onClick={handleUserClick}
+              className={`w-9 h-9 rounded-full border backdrop-blur-md flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer relative ${
+                isLoggedIn
+                  ? isAdmin
+                    ? 'border-[#EAEF30]/40 bg-[#EAEF30]/10 text-[#EAEF30]'
+                    : 'border-white/20 bg-white/10 text-white'
+                  : 'border-white/15 bg-black/40 text-white hover:bg-white/10'
+              }`}
+              aria-label="User Account"
+            >
+              {isLoggedIn && user ? (
+                <span className="text-[10px] font-bold uppercase">{getInitials(user.name)}</span>
+              ) : (
+                <User size={16} strokeWidth={1.5} />
+              )}
+              {/* Online indicator */}
+              {isLoggedIn && (
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#0c101a] ${isAdmin ? 'bg-[#EAEF30]' : 'bg-green-400'}`} />
+              )}
+            </button>
+
+            {/* User Dropdown Menu */}
+            {isUserMenuOpen && isLoggedIn && (
+              <div className="absolute top-12 right-0 w-48 bg-[#0c101a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden py-1 z-50 flex flex-col">
+                <div className="px-4 py-3 border-b border-white/10">
+                  <p className="text-white text-xs font-bold truncate">{user?.name}</p>
+                  <p className="text-white/50 text-[10px] truncate">{user?.email}</p>
+                </div>
+                
+                <div className="py-1">
+                  <button 
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      onOpenAuth(); // Opens the profile modal
+                    }}
+                    className="w-full flex items-center px-4 py-2 text-xs font-bold text-white/80 hover:text-white hover:bg-white/5 transition-colors"
+                  >
+                    <Settings size={14} className="mr-3 text-white/50" />
+                    Edit Profile
+                  </button>
+                  
+                  {isAdmin && (
+                    <button 
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        navigate('/admin');
+                      }}
+                      className="w-full flex items-center px-4 py-2 text-xs font-bold text-[#EAEF30] hover:bg-[#EAEF30]/10 transition-colors"
+                    >
+                      <Shield size={14} className="mr-3 opacity-70" />
+                      Admin Panel
+                    </button>
+                  )}
+                </div>
+
+                <div className="border-t border-white/10 py-1">
+                  <button 
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      logout();
+                    }}
+                    className="w-full flex items-center px-4 py-2 text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors"
+                  >
+                    <LogOut size={14} className="mr-3 opacity-70" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
             )}
-            {/* Online indicator */}
-            {isLoggedIn && (
-              <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#0c101a] ${isAdmin ? 'bg-[#EAEF30]' : 'bg-green-400'}`} />
-            )}
-          </button>
+          </div>
 
           {/* Hamburger Menu Toggle */}
           <button 
