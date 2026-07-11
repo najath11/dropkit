@@ -1,0 +1,264 @@
+import pg from 'pg';
+import fs from 'fs';
+
+const { Client } = pg;
+
+const client = new Client({
+  connectionString: 'postgres://postgres.phlqjwalwdbydcarjjrd:rN7SAI0aQpV2qLiw@aws-0-us-east-1.pooler.supabase.com:6543/postgres',
+  ssl: { rejectUnauthorized: false }
+});
+
+const initialProducts = [
+  {
+    id: 'js-01',
+    name: 'MADRID 24/25 HOME KIT',
+    codename: 'Madrid Club Edition',
+    price: 195,
+    category: 'club',
+    description: 'A technical masterpiece engineered for professional pitch performance. Milled with lightweight speed-grids, bonded gold collar linings, and heat-pressed club crests to eliminate skin friction.',
+    details: [
+      'Ultra-breathable AeroGrid jacquard weave',
+      'Heat-applied ultra-light golden crest and star elements',
+      'Laser-perforated cooling zones across the spine',
+      'Seamless flatlock bonded cuffs and side seams',
+      'Athletic slim fit optimized for high-acceleration movement'
+    ],
+    fabric: {
+      composition: '100% Recycled Polyamide fibers',
+      weight: '120 gsm',
+      origin: 'Lombardy, Italy',
+      features: ['Active Moisture Dissipation', 'Anti-cling Debossed Pattern', 'Odor-block Finish'],
+      dragCoef: '0.315 CdA',
+      reclaimedPercentage: '92%'
+    },
+    colors: [
+      { name: 'Triple White & Gold', hex: '#F9F6F0' },
+      { name: 'Carbon Black & Gold', hex: '#1E1E1E' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_madrid_front.png',
+    backImage: '/assets/jersey_football_madrid_back.png'
+  },
+  {
+    id: 'js-02',
+    name: 'ARGENTINA 24/25 HOME KIT',
+    codename: 'Argentina World Cup Edition',
+    price: 220,
+    category: 'intl',
+    description: 'Archival championship design re-engineered for the modern athlete. Features debossed vertical striping, custom-milled ocean-bound plastics, and a woven gold star federation insignia.',
+    details: [
+      'Engineered mesh vertical debossed stripe structure',
+      '100% Ocean-bound post-consumer recycled polyamides',
+      'Reflective gold trim detailing on cuffs and collar',
+      'Three-star woven championship crest',
+      'High-stretch elastic recovery fabric'
+    ],
+    fabric: {
+      composition: '88% Recycled Polyester, 12% Bio-Elastane',
+      weight: '98 gsm',
+      origin: 'Treviso, Italy',
+      features: ['Hyper-Evaporative Weave', 'High-tensile Seams', 'Micro-capillary Moisture Management'],
+      dragCoef: '0.335 CdA',
+      reclaimedPercentage: '88%'
+    },
+    colors: [
+      { name: 'Celeste Blue & White', hex: '#87CEEB' },
+      { name: 'Midnight Blue & Gold', hex: '#1D2A44' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_argentina.png',
+    backImage: null
+  },
+  {
+    id: 'js-03',
+    name: 'MILAN 24/25 HOME KIT',
+    codename: 'Milano Club Edition',
+    price: 185,
+    category: 'club',
+    description: 'A bold, high-contrast kit built for intensive match conditions. Incorporates double-knit micro-fleece blends for cold-weather muscle warming during early winter matchdays.',
+    details: [
+      'Double-knit thermal regulation weave',
+      'Matte-finished vertical red and black stripes',
+      'Anti-abrasion collar striping',
+      'Seamless ventilation panels under sleeves'
+    ],
+    fabric: {
+      composition: '75% Recycled Polyester, 25% Organic Merino wool',
+      weight: '140 gsm',
+      origin: 'Como, Italy',
+      features: ['Thermal Muscle Regulation', 'Wool-Poly Blend Comfort', 'Natural Antimicrobial Finish'],
+      dragCoef: '0.340 CdA',
+      reclaimedPercentage: '75%'
+    },
+    colors: [
+      { name: 'Rossoneri Red & Black', hex: '#9E2A2B' },
+      { name: 'Milano Shadow Gray', hex: '#373A40' }
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_milan.png',
+    backImage: null
+  },
+  {
+    id: 'js-04',
+    name: 'MOROCCO 24/25 HOME KIT',
+    codename: 'Morocco Cup Edition',
+    price: 210,
+    category: 'intl',
+    description: 'An aerodynamic national kit incorporating traditional Moroccan geometric motifs on the collar and cuffs, engineered for warm weather performance with active thermoregulation.',
+    details: [
+      'Heat-applied gold federation insignia and details',
+      'Custom patterned flat-knit collar and sleeve trim',
+      'Micro-perforated back panel for maximum ventilation',
+      'Fitted silhouette optimized for high speed'
+    ],
+    fabric: {
+      composition: '90% Recycled Polyester, 10% Elastane',
+      weight: '105 gsm',
+      origin: 'Casablanca, Morocco',
+      features: ['Aero Drytech Mesh', 'Anti-odor Treatment', 'Quick-dry Fibers'],
+      dragCoef: '0.320 CdA',
+      reclaimedPercentage: '90%'
+    },
+    colors: [
+      { name: 'Atlas Red & Gold', hex: '#C1272D' }
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_morocco_front.jpg',
+    backImage: '/assets/jersey_football_morocco_back.jpg'
+  },
+  {
+    id: 'js-05',
+    name: 'BARCELONA 24/25 HOME KIT',
+    codename: 'Barcelona Blaugrana Edition',
+    price: 205,
+    category: 'club',
+    description: 'The iconic Blaugrana stripes reinterpreted with modern gradient weave structures. Constructed with hyper-evaporative yarns and a seamless collar for peak friction reduction.',
+    details: [
+      'Vertical Blaugrana engineered stripe structure',
+      'Custom yellow-accented gold numbering and typography',
+      'Seamless collar construction for friction reduction',
+      'Gold heat-pressed club crest and sponsor logo'
+    ],
+    fabric: {
+      composition: '95% Recycled Polyamide, 5% Bio-Elastane',
+      weight: '110 gsm',
+      origin: 'Catalonia, Spain',
+      features: ['Moisture Dissipation', 'Zero-friction Seams', 'Underarm Mesh Zonal Cooling'],
+      dragCoef: '0.310 CdA',
+      reclaimedPercentage: '95%'
+    },
+    colors: [
+      { name: 'Blaugrana Stripes', hex: '#004D98' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_barca_front.jpg',
+    backImage: '/assets/jersey_football_barca_back.jpg'
+  },
+  {
+    id: 'js-06',
+    name: 'LIVERPOOL 24/25 HOME KIT',
+    codename: 'Liverpool Crimson Edition',
+    price: 190,
+    category: 'club',
+    description: 'A striking crimson jersey featuring sharp, geometric pinstripe textures and white details. Developed with double-knit active cooling filaments for consistent performance under matchday stress.',
+    details: [
+      'Engineered geometric diagonal pinstripe graphic',
+      'Heat-applied white club crest and sponsor logos',
+      'Contrast white ribbed collar and side trim',
+      'High-ventilation zone mapping across chest and back'
+    ],
+    fabric: {
+      composition: '100% Recycled Polyester fibers',
+      weight: '115 gsm',
+      origin: 'Merseyside, UK',
+      features: ['Micro-capillary Moisture Transport', 'High-stretch Recovery', 'Anti-cling Knit'],
+      dragCoef: '0.325 CdA',
+      reclaimedPercentage: '85%'
+    },
+    colors: [
+      { name: 'Crimson Red & White', hex: '#C8102E' }
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_liverpool_front.jpg',
+    backImage: '/assets/jersey_football_liverpool_back.jpg'
+  },
+  {
+    id: 'js-07',
+    name: 'PSG 23/24 HOME KIT',
+    codename: 'Paris Mbappé Edition',
+    price: 215,
+    category: 'club',
+    description: 'A striking Parisian masterpiece featuring bold diagonal brushstroke graphics in deep navy and crimson. Engineered with Dri-FIT ADV technology for elite match performance and paired with the iconic #7 Mbappé print.',
+    details: [
+      'Dynamic diagonal brushstroke pattern in crimson red',
+      'Dri-FIT ADV moisture-wicking technology',
+      'Heat-applied club crest and sponsor logos',
+      'Ribbed red-and-white contrast collar and cuffs',
+      'Mbappé #7 heat-pressed lettering on the back'
+    ],
+    fabric: {
+      composition: '100% Recycled Polyester fibers',
+      weight: '112 gsm',
+      origin: 'Paris, France',
+      features: ['Dri-FIT ADV Evaporation', 'Anti-cling Mesh Zones', 'Seamless Bonded Side Panels'],
+      dragCoef: '0.318 CdA',
+      reclaimedPercentage: '90%'
+    },
+    colors: [
+      { name: 'Midnight Navy & Crimson', hex: '#0E1A2D' },
+      { name: 'Parisian White & Red', hex: '#F0F0F0' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_psg_front.png',
+    backImage: '/assets/jersey_football_psg_back.png'
+  }
+];
+
+async function seed() {
+  try {
+    await client.connect();
+    console.log('Connected to Postgres.');
+
+    // 1. Create Tables
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        codename TEXT,
+        price INTEGER NOT NULL,
+        category TEXT,
+        description TEXT,
+        details JSONB,
+        fabric JSONB,
+        colors JSONB,
+        sizes JSONB,
+        image TEXT,
+        "backImage" TEXT
+      );
+    `);
+    console.log('Created products table.');
+
+    // 2. Clear existing to be safe
+    await client.query('DELETE FROM products;');
+
+    // 3. Insert products
+    for (const p of initialProducts) {
+      await client.query(`
+        INSERT INTO products (id, name, codename, price, category, description, details, fabric, colors, sizes, image, "backImage")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      `, [
+        p.id, p.name, p.codename, p.price, p.category, p.description,
+        JSON.stringify(p.details), JSON.stringify(p.fabric), JSON.stringify(p.colors), JSON.stringify(p.sizes),
+        p.image, p.backImage || null
+      ]);
+    }
+    console.log('Inserted products.');
+
+  } catch (err) {
+    console.error('Error seeding:', err);
+  } finally {
+    await client.end();
+  }
+}
+
+seed();

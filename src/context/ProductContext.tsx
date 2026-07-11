@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import type { Product } from '../types';
 
 interface ProductContextType {
@@ -19,10 +20,16 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/products');
-      if (!res.ok) throw new Error('Failed to fetch products');
-      const data = await res.json();
-      setProducts(data);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*');
+
+      if (error) {
+        throw error;
+      }
+
+      // Supabase jsonb columns are automatically parsed by the JS client!
+      setProducts(data as Product[]);
     } catch (err: any) {
       setError(err.message);
     } finally {

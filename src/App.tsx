@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ProductProvider, useProducts } from './context/ProductContext';
+import { supabase } from './lib/supabase';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
@@ -24,11 +25,8 @@ function MainApp() {
 
   const handleAddProduct = async (newProduct: Product) => {
     try {
-      await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProduct)
-      });
+      const { error } = await supabase.from('products').insert(newProduct);
+      if (error) throw error;
       await refreshProducts();
     } catch (e) {
       console.error(e);
@@ -37,7 +35,8 @@ function MainApp() {
 
   const handleDeleteProduct = async (id: string) => {
     try {
-      await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) throw error;
       await refreshProducts();
     } catch (e) {
       console.error(e);
@@ -46,11 +45,11 @@ function MainApp() {
 
   const handleEditProduct = async (updatedProduct: Product) => {
     try {
-      await fetch(`/api/products/${updatedProduct.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProduct)
-      });
+      const { error } = await supabase
+        .from('products')
+        .update(updatedProduct)
+        .eq('id', updatedProduct.id);
+      if (error) throw error;
       await refreshProducts();
     } catch (e) {
       console.error(e);
