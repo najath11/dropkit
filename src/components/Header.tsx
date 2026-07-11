@@ -1,17 +1,43 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { navigate } from '../utils/router';
 
 interface HeaderProps {
   onOpenSizeGuide: () => void;
   onOpenSpecs: () => void;
   onOpenCollection: () => void;
   onOpenAdmin: () => void;
+  onOpenAuth: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAuth }) => {
   const { cartCount, setIsCartOpen } = useCart();
+  const { user, isLoggedIn, isAdmin } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleUserClick = () => {
+    if (!isLoggedIn) {
+      onOpenAuth();
+    } else if (isAdmin) {
+      // Admin goes directly to admin panel page
+      navigate('/admin');
+    } else {
+      // Regular user opens auth modal to see profile
+      onOpenAuth();
+    }
+  };
+
+  // Get user initials
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <header className="absolute top-6 left-0 right-0 z-50 w-full px-4 md:px-12 text-white bg-transparent">
@@ -20,7 +46,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
         {/* Brand Logo */}
         <div className="flex-1 flex justify-start z-50">
           <a 
-            href="#" 
+            href="/" 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
             className="font-sans text-xl tracking-tight font-extrabold uppercase text-white hover:opacity-90 transition-opacity"
           >
             DropKit
@@ -30,7 +60,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
         {/* Navigation - Centered Row */}
         <nav className="hidden md:flex items-center space-x-6 text-[11px] font-sans font-bold uppercase tracking-wider text-white/70 bg-black/40 border border-white/10 px-6 py-2 rounded-full backdrop-blur-md">
           <a 
-            href="#"
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
             className="bg-white text-black px-4 py-1.5 rounded-full font-bold transition-all duration-150"
           >
             Home
@@ -59,6 +93,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
               New
             </span>
           </div>
+          {isAdmin && (
+            <button 
+              onClick={() => navigate('/admin')} 
+              className="text-[#EAEF30] hover:text-white font-bold transition-colors duration-150 cursor-pointer py-1 border-l border-white/15 pl-4"
+            >
+              Admin Panel
+            </button>
+          )}
         </nav>
 
         {/* Utility Actions */}
@@ -77,13 +119,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
             )}
           </button>
 
-          {/* User Icon Button */}
+          {/* User Icon / Avatar Button */}
           <button 
-            onClick={onOpenAdmin}
-            className="w-9 h-9 rounded-full border border-white/15 bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer"
+            onClick={handleUserClick}
+            className={`w-9 h-9 rounded-full border backdrop-blur-md flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer relative ${
+              isLoggedIn
+                ? isAdmin
+                  ? 'border-[#EAEF30]/40 bg-[#EAEF30]/10 text-[#EAEF30]'
+                  : 'border-white/20 bg-white/10 text-white'
+                : 'border-white/15 bg-black/40 text-white hover:bg-white/10'
+            }`}
             aria-label="User Account"
           >
-            <User size={16} strokeWidth={1.5} />
+            {isLoggedIn && user ? (
+              <span className="text-[10px] font-bold uppercase">{getInitials(user.name)}</span>
+            ) : (
+              <User size={16} strokeWidth={1.5} />
+            )}
+            {/* Online indicator */}
+            {isLoggedIn && (
+              <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#0c101a] ${isAdmin ? 'bg-[#EAEF30]' : 'bg-green-400'}`} />
+            )}
           </button>
 
           {/* Hamburger Menu Toggle */}
@@ -100,8 +156,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
         {isMobileMenuOpen && (
           <div className="md:hidden flex flex-col space-y-3 items-center w-full bg-black/95 rounded-[24px] border border-white/10 p-5 shadow-2xl backdrop-blur-lg absolute left-0 right-0 top-14 mx-auto max-w-[95%] z-50">
             <a 
-              href="#"
-              onClick={() => setIsMobileMenuOpen(false)}
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                navigate('/');
+              }}
               className="w-full text-center px-4 py-2 bg-white text-black rounded-full font-bold text-[10px] uppercase tracking-wider"
             >
               Home
@@ -136,6 +196,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAdmin })
                 New
               </span>
             </div>
+            {isAdmin && (
+              <button 
+                onClick={() => {
+                  navigate('/admin');
+                  setIsMobileMenuOpen(false);
+                }} 
+                className="w-full text-center text-[#EAEF30] hover:text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 border border-[#EAEF30]/25 bg-[#EAEF30]/5 rounded-xl mt-2"
+              >
+                Admin Panel
+              </button>
+            )}
           </div>
         )}
 

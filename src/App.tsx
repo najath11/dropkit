@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
@@ -10,12 +11,15 @@ import { SizeGuide } from './components/SizeGuide';
 import { EarlyAccess } from './components/EarlyAccess';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
-import { AdminModal } from './components/AdminModal';
+import { AdminPage } from './components/AdminPage';
+import { AuthModal } from './components/AuthModal';
 import { products } from './data/products';
+import { usePath } from './utils/router';
 import type { Product } from './types';
 
 function MainApp() {
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const path = usePath();
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [allProducts, setAllProducts] = useState<Product[]>(() => {
     const saved = localStorage.getItem('dropkit_products');
     if (saved) {
@@ -40,6 +44,12 @@ function MainApp() {
     localStorage.setItem('dropkit_products', JSON.stringify(updated));
   };
 
+  const handleEditProduct = (updatedProduct: Product) => {
+    const updated = allProducts.map((p) => p.id === updatedProduct.id ? updatedProduct : p);
+    setAllProducts(updated);
+    localStorage.setItem('dropkit_products', JSON.stringify(updated));
+  };
+
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -51,6 +61,17 @@ function MainApp() {
     scrollTo('trust-faq');
   };
 
+  if (path === '/admin') {
+    return (
+      <AdminPage 
+        products={allProducts}
+        onAddProduct={handleAddProduct}
+        onDeleteProduct={handleDeleteProduct}
+        onEditProduct={handleEditProduct}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#E5E5E7] p-3 sm:p-4 md:p-6 lg:p-8 gap-6 md:gap-8 justify-center">
       {/* Rounded-Corner Card Hero Section */}
@@ -59,7 +80,8 @@ function MainApp() {
           onOpenSizeGuide={() => scrollTo('sizing-authenticity')}
           onOpenSpecs={() => handleOpenSpecs()}
           onOpenCollection={() => scrollTo('collection')}
-          onOpenAdmin={() => setIsAdminOpen(true)}
+          onOpenAdmin={() => {}}
+          onOpenAuth={() => setIsAuthOpen(true)}
         />
         
         <Hero 
@@ -92,12 +114,9 @@ function MainApp() {
 
       <CartDrawer />
 
-      <AdminModal 
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-        products={allProducts}
-        onAddProduct={handleAddProduct}
-        onDeleteProduct={handleDeleteProduct}
+      <AuthModal 
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
       />
     </div>
   );
@@ -105,9 +124,11 @@ function MainApp() {
 
 function App() {
   return (
-    <CartProvider>
-      <MainApp />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <MainApp />
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { X, Plus, Minus, Trash2, ArrowRight, CheckCircle } from 'lucide-react';
 
 export const CartDrawer: React.FC = () => {
   const { 
@@ -9,17 +10,62 @@ export const CartDrawer: React.FC = () => {
     setIsCartOpen, 
     updateQuantity, 
     removeFromCart, 
-    cartTotal 
+    cartTotal,
+    checkoutCart
   } = useCart();
 
+  const { user, isLoggedIn } = useAuth();
+  
+  const [guestName, setGuestName] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
+  const [orderSuccessId, setOrderSuccessId] = useState<string | null>(null);
+
   if (!isCartOpen) return null;
+
+  const handleCheckout = () => {
+    setCheckoutError('');
+    let email = '';
+    let name = '';
+
+    if (isLoggedIn && user) {
+      email = user.email;
+      name = user.name;
+    } else {
+      if (!guestName.trim() || !guestEmail.trim()) {
+        setCheckoutError('Please enter guest details or sign in.');
+        return;
+      }
+      if (!guestEmail.includes('@')) {
+        setCheckoutError('Please enter a valid email address.');
+        return;
+      }
+      email = guestEmail.trim();
+      name = guestName.trim();
+    }
+
+    const result = checkoutCart(email, name);
+    if (result.success && result.orderId) {
+      setOrderSuccessId(result.orderId);
+      // Reset guest fields
+      setGuestName('');
+      setGuestEmail('');
+    } else {
+      setCheckoutError(result.error || 'Failed to complete checkout.');
+    }
+  };
+
+  const handleCloseSuccess = () => {
+    setOrderSuccessId(null);
+    setIsCartOpen(false);
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden font-sans">
       {/* Background Overlay */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
-        onClick={() => setIsCartOpen(false)}
+        onClick={orderSuccessId ? handleCloseSuccess : () => setIsCartOpen(false)}
       ></div>
 
       <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
@@ -35,7 +81,7 @@ export const CartDrawer: React.FC = () => {
               </p>
             </div>
             <button 
-              onClick={() => setIsCartOpen(false)}
+              onClick={orderSuccessId ? handleCloseSuccess : () => setIsCartOpen(false)}
               className="p-1 hover:text-[#EAEF30] transition-colors duration-150 cursor-pointer text-white"
             >
               <X size={20} strokeWidth={1.5} />
@@ -44,7 +90,25 @@ export const CartDrawer: React.FC = () => {
 
           {/* Drawer Items Area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {cartItems.length === 0 ? (
+            {orderSuccessId ? (
+              /* Success Screen */
+              <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 h-full">
+                <CheckCircle size={56} className="text-[#EAEF30] animate-bounce" />
+                <div className="space-y-2">
+                  <h3 className="font-display uppercase text-lg text-white">Allocation Secured</h3>
+                  <p className="text-[10px] text-[#EAEF30] font-mono tracking-widest uppercase">ORDER ID: {orderSuccessId}</p>
+                </div>
+                <p className="text-xs text-neutral-400 leading-relaxed max-w-xs font-sans">
+                  Your kit allocation is registered successfully. An automated invoice details check and dispatch scheduling has been added to our queue.
+                </p>
+                <button
+                  onClick={handleCloseSuccess}
+                  className="w-full max-w-[200px] py-2.5 bg-white/5 border border-white/10 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all rounded-lg font-mono cursor-pointer"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            ) : cartItems.length === 0 ? (
               <div className="text-center py-20 space-y-4">
                 <p className="text-neutral-400 text-xs">Allocations empty. Review the speedwear suite to assign kits.</p>
                 <button
@@ -121,7 +185,7 @@ export const CartDrawer: React.FC = () => {
           </div>
 
           {/* Drawer Footer (Subtotal / Checkout) */}
-          {cartItems.length > 0 && (
+          {!orderSuccessId && cartItems.length > 0 && (
             <div className="p-6 border-t border-white/10 bg-black/45 space-y-4">
               <div className="font-mono text-[10px] text-neutral-400 uppercase tracking-wider">
                 ALLOCATION SUMMARY
@@ -134,13 +198,49 @@ export const CartDrawer: React.FC = () => {
                 </span>
               </div>
               
+              {/* User authentication check / Guest info form */}
+              {isLoggedIn && user ? (
+                <div className="flex items-center justify-between text-neutral-300 font-mono text-[9px] border border-white/10 bg-white/5 px-3 py-2 rounded-lg">
+                  <span>CHECKING OUT AS:</span>
+                  <span className="text-[#EAEF30] font-bold uppercase">{user.name}</span>
+                </div>
+              ) : (
+                <div className="space-y-2 border border-white/10 bg-white/5 p-3 rounded-lg">
+                  <div className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider">
+                    Guest Requisition Details:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      className="bg-black/60 border border-white/10 px-2.5 py-1.5 text-[10px] text-white focus:outline-none focus:border-[#EAEF30] rounded-md font-mono"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Your Email"
+                      value={guestEmail}
+                      onChange={(e) => setGuestEmail(e.target.value)}
+                      className="bg-black/60 border border-white/10 px-2.5 py-1.5 text-[10px] text-white focus:outline-none focus:border-[#EAEF30] rounded-md font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {checkoutError && (
+                <p className="text-[10px] text-red-400 font-mono text-center uppercase tracking-wider">
+                  {checkoutError}
+                </p>
+              )}
+
               <p className="text-[10px] text-neutral-400 leading-relaxed font-sans">
                 Taxes, freight, and custom duties calculated during secure processing. Allocations are reserved in database registry for 20 minutes.
               </p>
 
               <button
                 className="w-full py-3.5 bg-[#EAEF30] text-black hover:opacity-90 transition-all text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2 rounded-lg shadow-md"
-                onClick={() => alert('Allocation secure workflow initiated. (Connected to checkout API)')}
+                onClick={handleCheckout}
               >
                 Proceed to Checkout
                 <ArrowRight size={14} />
@@ -153,3 +253,4 @@ export const CartDrawer: React.FC = () => {
     </div>
   );
 };
+

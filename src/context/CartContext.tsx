@@ -11,6 +11,7 @@ interface CartContextType {
   cartCount: number;
   cartTotal: number;
   clearCart: () => void;
+  checkoutCart: (email: string, name: string) => { success: boolean; orderId?: string; error?: string };
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -77,6 +78,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCartItems([]);
   };
 
+  const checkoutCart = (email: string, name: string) => {
+    if (cartItems.length === 0) {
+      return { success: false, error: 'Cart is empty' };
+    }
+
+    const orderId = `DK-${Math.floor(100000 + Math.random() * 900000)}`;
+    const newOrder = {
+      id: orderId,
+      email,
+      name,
+      date: new Date().toISOString(),
+      items: cartItems.map(item => ({
+        id: item.product.id,
+        name: item.product.name,
+        price: item.product.price,
+        quantity: item.quantity,
+        size: item.selectedSize,
+        color: item.selectedColor,
+        image: item.product.image
+      })),
+      total: cartTotal,
+      status: 'Pending'
+    };
+
+    try {
+      const existingOrdersStr = localStorage.getItem('dropkit_orders');
+      const existingOrders = existingOrdersStr ? JSON.parse(existingOrdersStr) : [];
+      localStorage.setItem('dropkit_orders', JSON.stringify([newOrder, ...existingOrders]));
+      clearCart();
+      return { success: true, orderId };
+    } catch (e) {
+      console.error('Failed to save order', e);
+      return { success: false, error: 'Failed to process checkout' };
+    }
+  };
+
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const cartTotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
@@ -92,6 +129,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cartCount,
         cartTotal,
         clearCart,
+        checkoutCart,
       }}
     >
       {children}

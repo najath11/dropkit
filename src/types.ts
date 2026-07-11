@@ -26,3 +26,9 @@ export interface CartItem {
   selectedSize: string;
   quantity: number;
 }
+
+export interface User {
+  email: string;
+  name: string;
+  password: string;
+}
