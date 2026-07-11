@@ -1,19 +1,15 @@
-import { useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
 import { ProductCollection } from './components/ProductCollection';
-import { FabricDetail } from './components/FabricDetail';
+import { TrustAndFaq } from './components/TrustAndFaq';
 import { SizeGuide } from './components/SizeGuide';
 import { EarlyAccess } from './components/EarlyAccess';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
-import type { Product } from './types';
 
 function MainApp() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
-
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -21,11 +17,8 @@ function MainApp() {
     }
   };
 
-  const handleOpenSpecs = (product?: Product) => {
-    if (product) {
-      setSelectedProduct(product);
-    }
-    scrollTo('material-specs');
+  const handleOpenSpecs = () => {
+    scrollTo('trust-faq');
   };
 
   return (
@@ -50,9 +43,7 @@ function MainApp() {
           onOpenSizeGuide={() => scrollTo('sizing-authenticity')}
         />
         
-        <FabricDetail 
-          selectedProduct={selectedProduct}
-        />
+        <TrustAndFaq />
         
         <SizeGuide />
         

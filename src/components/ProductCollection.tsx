@@ -31,11 +31,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
       }}
     >
       {/* Product Header */}
-      <div className="flex justify-between items-start mb-2 sm:mb-4">
+      <div className="flex justify-between items-start mb-3 sm:mb-4">
         <div>
-          <span className="font-mono text-[8px] sm:text-[9px] text-neutral-400 tracking-widest">
-            REF: {product.id.toUpperCase()} // {product.fabric.weight}
-          </span>
           <h3 className="font-sans font-black uppercase text-sm sm:text-base tracking-tight text-white group-hover:text-[#EAEF30] transition-colors duration-150">
             {product.name}
           </h3>
@@ -43,13 +40,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
             {product.codename}
           </p>
         </div>
-        <div className="font-mono text-xs sm:text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-1.5 sm:px-2 py-0.5 rounded-md">
+        <div className="font-mono text-xs sm:text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">
           ₹{product.price}
         </div>
       </div>
 
       {/* Product Image Panel */}
-      <div className="aspect-square bg-[#080b12] relative overflow-hidden mb-6 border border-white/5 group/img rounded-xl">
+      <div className="aspect-[3/4] bg-[#080b12] relative overflow-hidden mb-6 border border-white/5 group/img rounded-xl">
         <img
           src={product.image}
           alt={`${product.name} Front`}
@@ -72,12 +69,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
               e.currentTarget.src = 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800';
             }}
           />
-        )}
-        
-        {product.fabric.dragCoef && (
-          <div className="absolute top-3 left-3 bg-black/85 text-[#EAEF30] text-[9px] font-mono px-2 py-0.5 tracking-wider uppercase z-10 border border-white/10 rounded-md">
-            Aero: {product.fabric.dragCoef}
-          </div>
         )}
         
         {/* Front/Back Manual Toggle Overlay */}
@@ -118,15 +109,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         {product.description}
       </p>
 
-
-
       {/* Swatch & Size Selectors */}
       <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
         
         {/* Color Swatch */}
         <div>
-          <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-neutral-400">Colorway: {color}</span>
-          <div className="flex items-center space-x-1.5 mt-1 sm:mt-1.5">
+          <div className="flex items-center space-x-1.5">
             {product.colors.map((c) => (
               <button
                 key={c.name}
