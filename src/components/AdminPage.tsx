@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Lock, ShoppingBag, Plus, Trash2, Edit3, Image as ImageIcon, 
   TrendingUp, DollarSign, Users, Settings, ChevronRight, ArrowLeft,
-  Shield, AlertTriangle, Save, ShoppingCart, RefreshCw
+  Shield, AlertTriangle, Save, ShoppingCart, RefreshCw, Loader2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { navigate } from '../utils/router';
@@ -464,11 +464,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     setFormSizes(['S', 'M', 'L', 'XL']);
   };
 
-  // Form submit handler (both Add & Edit)
-  const handleSaveProduct = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formName || !formPrice) return;
+  const [isUploading, setIsUploading] = useState(false);
 
+  // Form submit handler (both Add & Edit)
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName || !formPrice || isUploading) return;
+
+    setIsUploading(true);
     const parsedPrice = parseFloat(formPrice) || 120;
     const detailsArray = formDetails.split('\n').map(d => d.trim()).filter(d => d !== '');
     const featuresArray = formFeatures.split(',').map(f => f.trim()).filter(f => f !== '');
@@ -495,6 +498,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       backImage: formBackImage.trim() || undefined
     };
 
+    // Simulate network delay to show the upload bar
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     if (editingProduct) {
       onEditProduct(productPayload);
       setEditingProduct(null);
@@ -507,6 +513,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     setFormName('');
     setFormCodename('');
     setFormPrice('');
+    setIsUploading(false);
   };
 
   const handleAddColor = () => {
@@ -1362,12 +1369,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
                     </div>
 
-                    <button
-                      type="submit"
-                      className="w-full py-3 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all cursor-pointer rounded-xl flex items-center justify-center gap-1.5 font-sans"
-                    >
-                      <Save size={14} /> Commit Changes to Catalog
-                    </button>
+                    <div className="flex flex-col gap-2 relative">
+                      <button
+                        type="submit"
+                        disabled={isUploading}
+                        className="w-full py-3 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-95 disabled:opacity-70 transition-all cursor-pointer rounded-xl flex items-center justify-center gap-1.5 font-sans"
+                      >
+                        {isUploading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} 
+                        {isUploading ? 'Committing to Catalog...' : 'Commit Changes to Catalog'}
+                      </button>
+
+                      {/* Loading Bar under the button */}
+                      {isUploading && (
+                        <div className="absolute -bottom-3 left-0 right-0 h-1 bg-black/40 rounded-full overflow-hidden">
+                          <div className="h-full bg-[#EAEF30] animate-pulse w-full origin-left" style={{ animation: 'progress 1.5s ease-in-out infinite' }}></div>
+                        </div>
+                      )}
+                    </div>
                   </form>
                 </div>
               ) : (

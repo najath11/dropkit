@@ -172,7 +172,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
           }`}
         >
           {/* Trust Badges Container */}
-          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-xl border border-white/[0.06] rounded-[24px] md:bg-transparent md:backdrop-blur-none md:border-none md:rounded-none py-5 md:py-0 px-4 md:px-0">
+          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-md border border-white/[0.06] rounded-[24px] md:bg-transparent md:backdrop-blur-none md:border-none md:rounded-none py-5 md:py-0 px-4 md:px-0">
             <div className="flex flex-row flex-wrap justify-between md:justify-start items-center gap-y-4 gap-x-2 md:gap-12 text-white/80">
               <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
                 <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
@@ -207,7 +207,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
           </div>
 
           {/* Promo Cards Glass Panel */}
-          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-xl border border-white/[0.06] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col md:flex-row">
+          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-md border border-white/[0.06] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col md:flex-row">
             
             {/* Column 1 */}
             <div
