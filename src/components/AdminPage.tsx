@@ -353,10 +353,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     }
   }, []);
 
-  const handleAdminSignIn = (e: React.FormEvent) => {
+  const handleAdminSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
-    const result = login(emailInput.trim(), passwordInput);
+    const result = await login(emailInput.trim(), passwordInput);
     if (!result.success) {
       setAuthError(result.error || 'Authentication credentials rejected.');
     }
