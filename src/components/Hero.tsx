@@ -43,18 +43,18 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
         }`}
       >
         {/* Left Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:left-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-6 md:mb-0">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-white select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+        <div className="w-full md:absolute md:left-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-4 md:mb-0">
+          <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-white select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
             ENGINEERED
             <br />
             VICTORY
           </h1>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-[#EAEF30] select-none mt-1 sm:mt-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-[#EAEF30] select-none mt-1 sm:mt-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
             LEGENDARY
             <br />
             STYLE
           </h2>
-          <div className="mt-6 text-left">
+          <div className="hidden md:block mt-6 text-left">
             <p className="text-xs sm:text-sm font-bold text-white/95 uppercase tracking-widest leading-relaxed font-mono drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               Authentic Design.
               <br />
@@ -64,30 +64,30 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
         </div>
 
         {/* Right Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:right-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-4 md:mt-0">
+        <div className="w-full md:absolute md:right-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-2 md:mt-0">
           {/* Top Right Badges */}
-          <div className="flex flex-wrap gap-2 mb-5">
-            <span className="px-3.5 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
+          <div className="flex flex-wrap gap-1.5 mb-3 md:mb-5 scale-90 md:scale-100 origin-left md:origin-right">
+            <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 bg-white text-black text-[8px] md:text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
               Authentic
             </span>
-            <span className="px-3.5 py-1 bg-[#EAEF30] text-black text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
+            <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 bg-[#EAEF30] text-black text-[8px] md:text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
               Limited Edition
             </span>
-            <span className="px-3.5 py-1 bg-transparent border border-white/30 text-white text-[9px] uppercase tracking-widest font-extrabold rounded-full">
+            <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 bg-transparent border border-white/30 text-white text-[8px] md:text-[9px] uppercase tracking-widest font-extrabold rounded-full">
               Fan Fav
             </span>
           </div>
 
-          <p className="text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs whitespace-pre-line font-sans drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
+          <p className="hidden md:block text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs whitespace-pre-line font-sans drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
             Designed For Every Match, Every Moment,
             and Every Victory. Find Your Fit.
           </p>
           
-          <div className="mt-8">
-            <h4 className="text-3xl sm:text-4xl font-display text-[#EAEF30] uppercase tracking-wider leading-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+          <div className="mt-4 md:mt-8">
+            <h4 className="text-xl xs:text-2xl sm:text-4xl font-display text-[#EAEF30] uppercase tracking-wider leading-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
               Flash Drop 25% Off
             </h4>
-            <p className="text-[9px] sm:text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-2 font-mono">
+            <p className="text-[8px] sm:text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-1.5 font-mono">
               Our All-New International Kits
             </p>
           </div>
@@ -96,59 +96,50 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
 
       {/* Bottom Row */}
       <div 
-        className={`w-full flex flex-col sm:flex-row items-end justify-between z-10 gap-6 px-6 md:px-12 pb-2 transition-all duration-1000 delay-300 ease-out ${
+        className={`w-full flex flex-row items-center justify-between z-10 gap-4 px-6 md:px-12 pb-2 transition-all duration-1000 delay-300 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
         {/* Rating Section */}
-        <div className="flex justify-center md:justify-start">
-          <div className="flex flex-col items-start gap-1">
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2 shrink-0">
-                {avatars.map((url, i) => (
-                  <img 
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-neutral-900 object-cover" 
-                    src={url} 
-                    alt="Customer Reviewer" 
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col justify-center leading-tight">
-                <span className="text-white font-extrabold text-xs">4.8/5</span>
-                <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">Star Rated</span>
-              </div>
-            </div>
-            <p className="text-[9px] text-neutral-300 font-bold uppercase tracking-widest mt-1.5 font-mono">
-              From 15,000+ Customers
-            </p>
+        <div className="flex items-center gap-2">
+          <div className="flex -space-x-1.5 shrink-0">
+            {avatars.map((url, i) => (
+              <img 
+                key={i}
+                className="w-7 h-7 rounded-full border border-neutral-900 object-cover" 
+                src={url} 
+                alt="Customer Reviewer" 
+              />
+            ))}
+          </div>
+          <div className="flex flex-col justify-center leading-none text-left">
+            <span className="text-white font-extrabold text-[10px]">4.8/5 Rated</span>
+            <span className="text-[8px] text-neutral-400 font-bold uppercase tracking-wider mt-0.5">15k+ Athletes</span>
           </div>
         </div>
 
         {/* Scroll button */}
-        <div className="flex justify-center md:justify-end">
-          <div 
-            onClick={onExploreCollection}
-            className="group flex flex-col items-center gap-1.5 cursor-pointer"
+        <div 
+          onClick={onExploreCollection}
+          className="group flex items-center gap-2 cursor-pointer"
+        >
+          <span className="text-[8px] uppercase tracking-widest text-neutral-400 group-hover:text-[#EAEF30] transition-colors duration-300 font-bold hidden sm:inline">
+            Scroll To Explore
+          </span>
+          <button 
+            className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/60 group-hover:text-white group-hover:border-white/40 transition-all duration-300"
+            aria-label="Scroll Down"
           >
-            <button 
-              className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/60 group-hover:text-white group-hover:border-white/40 transition-all duration-300"
-              aria-label="Scroll Down"
+            <svg 
+              className="w-3.5 h-3.5 animate-bounce" 
+              style={{ animationDuration: '2.5s' }}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
             >
-              <svg 
-                className="w-3.5 h-3.5 animate-bounce" 
-                style={{ animationDuration: '2.5s' }}
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </button>
-            <span className="text-[8px] uppercase tracking-[0.2em] text-neutral-400 group-hover:text-white transition-colors duration-300 font-bold">
-              Scroll To Explore
-            </span>
-          </div>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
