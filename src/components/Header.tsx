@@ -35,10 +35,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSpecs, onOpenCollection })
             Home
           </a>
           <button 
-            onClick={onOpenSpecs} 
+            onClick={onOpenCollection} 
             className="text-white/60 hover:text-white transition-colors duration-150 cursor-pointer py-1"
           >
-            About
+            Teams
           </button>
           <a 
             href="#early-access" 
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSpecs, onOpenCollection })
               onClick={onOpenCollection} 
               className="text-white/60 hover:text-white transition-colors duration-150 cursor-pointer"
             >
-              Fresh In
+              Kits
             </button>
             {/* Yellow New Badge */}
             <span className="absolute -top-1.5 -right-6 px-1.5 py-0.5 text-[8px] font-extrabold bg-brand-yellow text-black rounded-full uppercase leading-none scale-90 rotate-[12deg] tracking-wide">
@@ -106,12 +106,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSpecs, onOpenCollection })
             </a>
             <button 
               onClick={() => {
-                onOpenSpecs();
+                onOpenCollection();
                 setIsMobileMenuOpen(false);
               }} 
               className="w-full text-center text-white/70 hover:text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer py-1.5"
             >
-              About
+              Teams
             </button>
             <a 
               href="#early-access" 
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSpecs, onOpenCollection })
                 }} 
                 className="text-white/70 hover:text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer py-1.5"
               >
-                Fresh In
+                Kits
               </button>
               <span className="absolute top-1.5 right-[35%] px-1.5 py-0.5 text-[8px] font-extrabold bg-brand-yellow text-black rounded-full uppercase leading-none scale-90 rotate-[12deg]">
                 New

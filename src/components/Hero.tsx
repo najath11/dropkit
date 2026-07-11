@@ -11,61 +11,30 @@ const avatars = [
   "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100"
 ];
 
-const slides = [
-  {
-    title1: "REIMAGINED",
-    title2: "KIT CULTURE",
-    title2Color: "text-[#E6B022]",
-    subtitle: "Kit Evolved.\nHeritage Perfected.",
-    description: "Engineered For Performance,\nStyled For Life. Every Thread Counts.",
-    imageDesktop: "/assets/hero_barca.png",
-    imageMobile: "/assets/hero_barca.png",
-    imageClass: "object-contain md:object-cover scale-110 md:scale-[1.3] translate-y-4 md:translate-y-0 mix-blend-screen",
-    discount: "Kit Drop 30%",
-    discountDesc: "For All New Club Jersey Collection",
-    tags: []
-  },
-  {
-    title1: "ENGINEERED VICTORY",
-    title2: "LEGENDARY STYLE",
-    title2Color: "text-[#D00027]",
-    subtitle: "Premium Design.\nUltimate Performance.",
-    description: "Built for Champions.\nWear the Badge.",
-    imageDesktop: "/assets/liverpool_clean_desktop.png",
-    imageMobile: "/assets/liverpool_clean_mobile.png",
-    imageClass: "object-contain md:object-cover scale-110 md:scale-[1.3] translate-y-4 md:translate-y-0 mix-blend-screen",
-    discount: "Limited Edition",
-    discountDesc: "Authentic Match Day Collection",
-    tags: ["Authentic", "Limited Edition"]
-  }
-];
-
-export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs }) => {
+export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const slideTimer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(slideTimer);
-  }, []);
-
-  const slide = slides[currentSlide];
-
   return (
-    <section className="relative w-full h-full flex flex-col justify-between bg-transparent flex-grow pt-28 pb-6 md:pt-32 md:pb-8 min-h-[600px] overflow-hidden">
-      {/* radial spotlight */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_60%)] pointer-events-none" />
+    <section className="relative w-full h-full flex flex-col justify-between bg-transparent flex-grow pt-24 pb-6 md:pt-28 md:pb-8 min-h-[620px] overflow-hidden">
+      {/* Background Visual */}
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+        <img 
+          src="/assets/dropkit_hero_clean.png" 
+          alt="Hero background"
+          className="w-full h-full object-cover object-center filter contrast-[1.02] brightness-[0.98]"
+        />
+        {/* Subtle dark radial glow overlay at the far edges to blend */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02),rgba(8,9,11,0.45)_85%)] pointer-events-none" />
+      </div>
 
-      {/* legibility scrims (desktop only) */}
-      <div className="hidden md:block absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#08090b]/70 via-[#08090b]/30 to-transparent pointer-events-none z-1" />
-      <div className="hidden md:block absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#08090b]/60 via-[#08090b]/20 to-transparent pointer-events-none z-1" />
+      {/* Legibility scrims (desktop only) - toned down for image brightness */}
+      <div className="hidden md:block absolute inset-y-0 left-0 w-[35%] bg-gradient-to-r from-[#08090b]/50 via-[#08090b]/10 to-transparent pointer-events-none z-1" />
+      <div className="hidden md:block absolute inset-y-0 right-0 w-[30%] bg-gradient-to-l from-[#08090b]/45 via-[#08090b]/5 to-transparent pointer-events-none z-1" />
 
       {/* Main content area */}
       <div 
@@ -74,97 +43,55 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs 
         }`}
       >
         {/* Left Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:left-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-8 md:mb-0 transition-opacity duration-700" key={`title-${currentSlide}`}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight text-white animate-fade-in-up">
-            {slide.title1}
+        <div className="w-full md:absolute md:left-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-[48%] text-left mb-6 md:mb-0">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-white select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+            ENGINEERED
+            <br />
+            VICTORY
           </h1>
-          <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.85] tracking-tight ${slide.title2Color} animate-fade-in-up delay-75`}>
-            {slide.title2}
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display uppercase leading-[0.82] tracking-tight text-[#EAEF30] select-none mt-1 sm:mt-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+            LEGENDARY
+            <br />
+            STYLE
           </h2>
-          <div className="mt-5 text-left animate-fade-in-up delay-150">
-            <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest leading-relaxed whitespace-pre-line">
-              {slide.subtitle}
+          <div className="mt-6 text-left">
+            <p className="text-xs sm:text-sm font-bold text-white/95 uppercase tracking-widest leading-relaxed font-mono drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+              Authentic Design.
+              <br />
+              Unrivaled Performance.
             </p>
           </div>
-        </div>
-
-        {/* Center Image Visual */}
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center z-0 pointer-events-none transition-opacity duration-1000" key={`image-${currentSlide}`}>
-          <picture className={`w-full h-full animate-fade-in ${slide.imageClass}`}>
-            <source media="(min-width: 768px)" srcSet={slide.imageDesktop} />
-            <img 
-              src={slide.imageMobile} 
-              alt="Hero Banner"
-              loading="eager"
-              fetchPriority="high"
-              className="w-full h-full object-cover md:object-contain"
-            />
-          </picture>
         </div>
 
         {/* Right Rail (Desktop: absolute, Mobile: static/flow) */}
-        <div className="w-full md:absolute md:right-12 md:top-1/2 md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-4 md:mt-0" key={`right-${currentSlide}`}>
-          
-          {/* Top Right Tags */}
-          {slide.tags.length > 0 && (
-            <div className="flex gap-2 mb-4 animate-fade-in-up">
-              {slide.tags.map((tag, i) => (
-                <span key={i} className="px-3 py-1 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[9px] uppercase tracking-widest font-bold rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <p className="text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs whitespace-pre-line animate-fade-in-up delay-75">
-            {slide.description}
-          </p>
-          
-          <div className="flex items-center gap-2.5 mt-5 justify-start md:justify-end animate-fade-in-up delay-150">
-            <button 
-              onClick={onExploreSpecs}
-              className="px-5 py-2 bg-white text-black hover:bg-neutral-200 hover:scale-105 active:scale-95 transition-all duration-300 font-extrabold rounded-full text-[10px] uppercase tracking-wider shadow-md cursor-pointer"
-            >
-              Play
-            </button>
-            <button 
-              onClick={onExploreCollection}
-              className="px-5 py-2 bg-[#EAEF30] text-black hover:opacity-90 hover:scale-105 active:scale-95 transition-all duration-300 font-extrabold rounded-full text-[10px] uppercase tracking-wider shadow-md cursor-pointer"
-            >
-              Collect
-            </button>
-            <button 
-              onClick={onExploreCollection}
-              className="px-5 py-2 bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-300 font-extrabold rounded-full text-[10px] uppercase tracking-wider shadow-md cursor-pointer"
-            >
-              Live
-            </button>
+        <div className="w-full md:absolute md:right-12 md:top-[45%] md:-translate-y-1/2 z-10 md:max-w-sm flex flex-col items-start md:items-end text-left md:text-right mt-4 md:mt-0">
+          {/* Top Right Badges */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            <span className="px-3.5 py-1 bg-white text-black text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
+              Authentic
+            </span>
+            <span className="px-3.5 py-1 bg-[#EAEF30] text-black text-[9px] uppercase tracking-widest font-extrabold rounded-full shadow-sm">
+              Limited Edition
+            </span>
+            <span className="px-3.5 py-1 bg-transparent border border-white/30 text-white text-[9px] uppercase tracking-widest font-extrabold rounded-full">
+              Fan Fav
+            </span>
           </div>
 
-          <div className="mt-8 animate-fade-in-up delay-200">
-            <h4 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display text-white uppercase tracking-wider leading-none">
-              {slide.discount}
+          <p className="text-neutral-200 text-xs sm:text-sm font-semibold leading-relaxed max-w-xs whitespace-pre-line font-sans drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
+            Designed For Every Match, Every Moment,
+            and Every Victory. Find Your Fit.
+          </p>
+          
+          <div className="mt-8">
+            <h4 className="text-3xl sm:text-4xl font-display text-[#EAEF30] uppercase tracking-wider leading-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+              Flash Drop 25% Off
             </h4>
             <p className="text-[9px] sm:text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-2 font-mono">
-              {slide.discountDesc}
+              Our All-New International Kits
             </p>
           </div>
         </div>
-
-      </div>
-
-      {/* Slide Indicators */}
-      <div className="absolute bottom-28 md:bottom-32 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-        {slides.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentSlide(idx)}
-            className={`w-12 h-1 rounded-full transition-all duration-500 cursor-pointer ${
-              idx === currentSlide ? 'bg-white scale-y-150' : 'bg-white/30 hover:bg-white/50'
-            }`}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
       </div>
 
       {/* Bottom Row */}
@@ -173,6 +100,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs 
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
+        {/* Rating Section */}
         <div className="flex justify-center md:justify-start">
           <div className="flex flex-col items-start gap-1">
             <div className="flex items-center gap-3">
@@ -191,12 +119,13 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection, onExploreSpecs 
                 <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">Star Rated</span>
               </div>
             </div>
-            <p className="text-[10px] text-neutral-300 font-bold uppercase tracking-widest mt-1">
-              9,000+ Fans
+            <p className="text-[9px] text-neutral-300 font-bold uppercase tracking-widest mt-1.5 font-mono">
+              From 15,000+ Customers
             </p>
           </div>
         </div>
 
+        {/* Scroll button */}
         <div className="flex justify-center md:justify-end">
           <div 
             onClick={onExploreCollection}

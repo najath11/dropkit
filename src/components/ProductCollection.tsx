@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import type { Product } from '../types';
-import { HelpCircle, SlidersHorizontal } from 'lucide-react';
 
 interface ProductCollectionProps {
   onOpenSpecs: (product: Product) => void;
@@ -11,12 +10,10 @@ interface ProductCollectionProps {
 
 interface ProductCardProps {
   product: Product;
-  onOpenSpecs: (product: Product) => void;
-  onOpenSizeGuide: () => void;
   addToCart: (product: Product, size: string, color: string) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenSizeGuide, addToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   const [size, setSize] = useState<string>(product.sizes[0] || 'M');
   const [color, setColor] = useState<string>(product.colors[0]?.name || '');
   const [activeSide, setActiveSide] = useState<'front' | 'back'>('front');
@@ -121,26 +118,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
         {product.description}
       </p>
 
-      {/* Tech Spec Quick Buttons */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center mb-4 sm:mb-6 pt-3 sm:pt-4 border-t border-white/10 text-[9px] sm:text-[11px] font-mono">
-        <button
-          onClick={() => onOpenSpecs(product)}
-          className="text-white/80 hover:text-brand-yellow transition-colors duration-150 flex items-center gap-1.5 cursor-pointer text-left"
-        >
-          <SlidersHorizontal size={10} className="sm:w-[12px] sm:h-[12px]" />
-          <span className="hidden sm:inline">Fabric Composition Specs</span>
-          <span className="inline sm:hidden">Fabric Specs</span>
-        </button>
-        
-        <button
-          onClick={onOpenSizeGuide}
-          className="text-neutral-400 hover:text-white transition-colors duration-150 flex items-center gap-1 cursor-pointer text-left"
-        >
-          <span className="hidden sm:inline">Size Chart</span>
-          <span className="inline sm:hidden">Size Guide</span>
-          <HelpCircle size={10} className="sm:w-[12px] sm:h-[12px]" />
-        </button>
-      </div>
+
 
       {/* Swatch & Size Selectors */}
       <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
@@ -259,8 +237,6 @@ export const ProductCollection: React.FC<ProductCollectionProps> = ({ onOpenSpec
             <ProductCard 
               key={product.id}
               product={product}
-              onOpenSpecs={onOpenSpecs}
-              onOpenSizeGuide={onOpenSizeGuide}
               addToCart={addToCart}
             />
           ))}
