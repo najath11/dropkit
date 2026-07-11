@@ -2,38 +2,19 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { User } from '../types';
 
 const ADMIN_EMAIL = 'njnajath88@gmail.com';
-const STORAGE_USERS_KEY = 'dropkit_users';
 const STORAGE_SESSION_KEY = 'dropkit_current_user';
+const STORAGE_TOKEN_KEY = 'dropkit_token';
 
 interface AuthContextType {
   user: User | null;
   isAdmin: boolean;
   isLoggedIn: boolean;
-  login: (email: string, password: string) => { success: boolean; error?: string };
-  signup: (name: string, email: string, password: string) => { success: boolean; error?: string };
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-function getStoredUsers(): User[] {
-  try {
-    const data = localStorage.getItem(STORAGE_USERS_KEY);
-    const users = data ? JSON.parse(data) : [];
-    // Ensure admin user exists
-    if (!users.some((u: User) => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase())) {
-      users.push({ email: ADMIN_EMAIL, name: 'Admin', password: 'admin' });
-      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
-    }
-    return users;
-  } catch {
-    return [{ email: ADMIN_EMAIL, name: 'Admin', password: 'admin' }];
-  }
-}
-
-function saveUsers(users: User[]) {
-  localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
-}
 
 function getStoredSession(): User | null {
   try {
@@ -44,55 +25,59 @@ function getStoredSession(): User | null {
   }
 }
 
-function saveSession(user: User | null) {
-  if (user) {
-    localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(STORAGE_SESSION_KEY);
-  }
-}
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => getStoredSession());
 
   const isLoggedIn = !!user;
   const isAdmin = !!user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-  // Sync session to localStorage
-  useEffect(() => {
-    saveSession(user);
-  }, [user]);
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
 
-  const login = (email: string, password: string): { success: boolean; error?: string } => {
-    const users = getStoredUsers();
-    const found = users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    );
+      if (!response.ok) {
+        return { success: false, error: data.error || 'Invalid email or password' };
+      }
 
-    if (!found) {
-      return { success: false, error: 'Invalid email or password' };
+      localStorage.setItem(STORAGE_TOKEN_KEY, data.token);
+      localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(data.user));
+      setUser(data.user);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Network error. Please try again.' };
     }
-
-    setUser(found);
-    return { success: true };
   };
 
-  const signup = (name: string, email: string, password: string): { success: boolean; error?: string } => {
-    const users = getStoredUsers();
-    const exists = users.some((u) => u.email.toLowerCase() === email.toLowerCase());
+  const signup = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await response.json();
 
-    if (exists) {
-      return { success: false, error: 'An account with this email already exists' };
+      if (!response.ok) {
+        return { success: false, error: data.error || 'Signup failed' };
+      }
+
+      localStorage.setItem(STORAGE_TOKEN_KEY, data.token);
+      localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(data.user));
+      setUser(data.user);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Network error. Please try again.' };
     }
-
-    const newUser: User = { email, name, password };
-    const updated = [...users, newUser];
-    saveUsers(updated);
-    setUser(newUser);
-    return { success: true };
   };
 
   const logout = () => {
+    localStorage.removeItem(STORAGE_TOKEN_KEY);
+    localStorage.removeItem(STORAGE_SESSION_KEY);
     setUser(null);
   };
 

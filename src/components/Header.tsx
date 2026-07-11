@@ -18,15 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCollection, onOpenAuth }) 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleUserClick = () => {
-    if (!isLoggedIn) {
-      onOpenAuth();
-    } else if (isAdmin) {
-      // Admin goes directly to admin panel page
-      navigate('/admin');
-    } else {
-      // Regular user opens auth modal to see profile
-      onOpenAuth();
-    }
+    onOpenAuth();
   };
 
   // Get user initials

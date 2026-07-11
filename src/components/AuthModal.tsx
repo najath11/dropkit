@@ -40,7 +40,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setShowPassword(false);
   };
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -50,7 +50,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    const result = login(signinEmail.trim(), signinPassword);
+    const result = await login(signinEmail.trim(), signinPassword);
     if (result.success) {
       setSuccess('Welcome back!');
       resetFields();
@@ -59,7 +59,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -79,7 +79,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    const result = signup(signupName.trim(), signupEmail.trim(), signupPassword);
+    const result = await signup(signupName.trim(), signupEmail.trim(), signupPassword);
     if (result.success) {
       setSuccess('Account created successfully!');
       resetFields();

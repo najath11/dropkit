@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import { ProductProvider, useProducts } from './context/ProductContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 
@@ -13,41 +14,47 @@ import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
 import { AdminPage } from './components/AdminPage';
 import { AuthModal } from './components/AuthModal';
-import { products } from './data/products';
 import { usePath } from './utils/router';
 import type { Product } from './types';
 
 function MainApp() {
   const path = usePath();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [allProducts, setAllProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('dropkit_products');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error(e);
-      }
+  const { products, refreshProducts } = useProducts();
+
+  const handleAddProduct = async (newProduct: Product) => {
+    try {
+      await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct)
+      });
+      await refreshProducts();
+    } catch (e) {
+      console.error(e);
     }
-    return products;
-  });
-
-  const handleAddProduct = (newProduct: Product) => {
-    const updated = [newProduct, ...allProducts];
-    setAllProducts(updated);
-    localStorage.setItem('dropkit_products', JSON.stringify(updated));
   };
 
-  const handleDeleteProduct = (id: string) => {
-    const updated = allProducts.filter((p) => p.id !== id);
-    setAllProducts(updated);
-    localStorage.setItem('dropkit_products', JSON.stringify(updated));
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      await refreshProducts();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleEditProduct = (updatedProduct: Product) => {
-    const updated = allProducts.map((p) => p.id === updatedProduct.id ? updatedProduct : p);
-    setAllProducts(updated);
-    localStorage.setItem('dropkit_products', JSON.stringify(updated));
+  const handleEditProduct = async (updatedProduct: Product) => {
+    try {
+      await fetch(`/api/products/${updatedProduct.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProduct)
+      });
+      await refreshProducts();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const scrollTo = (id: string) => {
@@ -64,7 +71,7 @@ function MainApp() {
   if (path === '/admin') {
     return (
       <AdminPage 
-        products={allProducts}
+        products={products}
         onAddProduct={handleAddProduct}
         onDeleteProduct={handleDeleteProduct}
         onEditProduct={handleEditProduct}
@@ -92,7 +99,7 @@ function MainApp() {
       
       <main className="flex-grow flex flex-col gap-6 md:gap-8 w-full">
         <ProductCollection 
-          products={allProducts}
+          products={products}
           onOpenSpecs={handleOpenSpecs}
           onOpenSizeGuide={() => scrollTo('sizing-authenticity')}
         />
@@ -125,9 +132,11 @@ function MainApp() {
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <MainApp />
-      </CartProvider>
+      <ProductProvider>
+        <CartProvider>
+          <MainApp />
+        </CartProvider>
+      </ProductProvider>
     </AuthProvider>
   );
 }
