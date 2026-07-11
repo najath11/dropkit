@@ -23,7 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
 
   return (
     <div 
-      className="group flex flex-col border border-white/5 bg-white/5 p-5 hover:shadow-2xl hover:border-white/20 transition-all duration-300 rounded-[24px] backdrop-blur-md"
+      className="group flex flex-col border border-white/5 bg-white/5 p-3 sm:p-5 hover:shadow-2xl hover:border-white/20 transition-all duration-300 rounded-[20px] sm:rounded-[24px] backdrop-blur-md"
       onMouseEnter={() => {
         if (product.backImage) {
           setActiveSide('back');
@@ -34,19 +34,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
       }}
     >
       {/* Product Header */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-2 sm:mb-4">
         <div>
-          <span className="font-mono text-[9px] text-neutral-400 tracking-widest">
+          <span className="font-mono text-[8px] sm:text-[9px] text-neutral-400 tracking-widest">
             REF: {product.id.toUpperCase()} // {product.fabric.weight}
           </span>
-          <h3 className="font-sans font-black uppercase text-base tracking-tight text-white group-hover:text-[#EAEF30] transition-colors duration-150">
+          <h3 className="font-sans font-black uppercase text-sm sm:text-base tracking-tight text-white group-hover:text-[#EAEF30] transition-colors duration-150">
             {product.name}
           </h3>
-          <p className="font-mono text-[10px] text-neutral-400 italic mt-0.5">
+          <p className="font-mono text-[9px] sm:text-[10px] text-neutral-400 italic mt-0.5">
             {product.codename}
           </p>
         </div>
-        <div className="font-mono text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">
+        <div className="font-mono text-xs sm:text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-1.5 sm:px-2 py-0.5 rounded-md">
           ₹{product.price}
         </div>
       </div>
@@ -117,47 +117,49 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
       </div>
 
       {/* Description */}
-      <p className="text-neutral-300 text-xs leading-relaxed mb-6 flex-grow">
+      <p className="hidden sm:block text-neutral-300 text-xs leading-relaxed mb-4 sm:mb-6 flex-grow">
         {product.description}
       </p>
 
       {/* Tech Spec Quick Buttons */}
-      <div className="flex justify-between items-center mb-6 pt-4 border-t border-white/10 text-[11px] font-mono">
+      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center mb-4 sm:mb-6 pt-3 sm:pt-4 border-t border-white/10 text-[9px] sm:text-[11px] font-mono">
         <button
           onClick={() => onOpenSpecs(product)}
-          className="text-white/80 hover:text-brand-yellow transition-colors duration-150 flex items-center gap-1.5 cursor-pointer"
+          className="text-white/80 hover:text-brand-yellow transition-colors duration-150 flex items-center gap-1.5 cursor-pointer text-left"
         >
-          <SlidersHorizontal size={12} />
-          Fabric Composition Specs
+          <SlidersHorizontal size={10} className="sm:w-[12px] sm:h-[12px]" />
+          <span className="hidden sm:inline">Fabric Composition Specs</span>
+          <span className="inline sm:hidden">Fabric Specs</span>
         </button>
         
         <button
           onClick={onOpenSizeGuide}
-          className="text-neutral-400 hover:text-white transition-colors duration-150 flex items-center gap-1 cursor-pointer"
+          className="text-neutral-400 hover:text-white transition-colors duration-150 flex items-center gap-1 cursor-pointer text-left"
         >
-          Size Chart
-          <HelpCircle size={12} />
+          <span className="hidden sm:inline">Size Chart</span>
+          <span className="inline sm:hidden">Size Guide</span>
+          <HelpCircle size={10} className="sm:w-[12px] sm:h-[12px]" />
         </button>
       </div>
 
       {/* Swatch & Size Selectors */}
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
         
         {/* Color Swatch */}
         <div>
-          <span className="font-mono text-[9px] uppercase tracking-wider text-neutral-400">Colorway: {color}</span>
-          <div className="flex items-center space-x-2 mt-1.5">
+          <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-neutral-400">Colorway: {color}</span>
+          <div className="flex items-center space-x-1.5 mt-1 sm:mt-1.5">
             {product.colors.map((c) => (
               <button
                 key={c.name}
                 onClick={() => setColor(c.name)}
-                className={`w-5 h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${
+                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${
                   color === c.name ? 'border-white scale-110' : 'border-transparent'
                 }`}
                 title={c.name}
               >
                 <span 
-                  className="w-3.5 h-3.5 rounded-full border border-white/10" 
+                  className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-white/10" 
                   style={{ backgroundColor: c.hex }}
                 ></span>
               </button>
@@ -167,13 +169,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
 
         {/* Size Selector */}
         <div>
-          <span className="font-mono text-[9px] uppercase tracking-wider text-neutral-400">Select Size</span>
-          <div className="flex flex-wrap gap-1.5 mt-1.5">
+          <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-neutral-400">Select Size</span>
+          <div className="flex flex-wrap gap-1 mt-1 sm:mt-1.5">
             {product.sizes.map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className={`w-8 h-8 flex items-center justify-center font-mono text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center font-mono text-[8px] sm:text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${
                   size === s 
                     ? 'bg-white text-black border-white font-semibold' 
                     : 'bg-transparent text-white border-white/10 hover:border-white/30'
@@ -188,7 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenSpecs, onOpenS
         {/* Add to Cart CTA */}
         <button
           onClick={() => addToCart(product, size, color)}
-          className="w-full py-3 bg-[#EAEF30] text-black border border-transparent text-xs font-bold tracking-wider uppercase hover:bg-transparent hover:text-[#EAEF30] hover:border-[#EAEF30] transition-all duration-200 cursor-pointer rounded-lg shadow-md"
+          className="w-full py-2 sm:py-3 bg-[#EAEF30] text-black border border-transparent text-[10px] sm:text-xs font-bold tracking-wider uppercase hover:bg-transparent hover:text-[#EAEF30] hover:border-[#EAEF30] transition-all duration-200 cursor-pointer rounded-lg shadow-md"
         >
           Allocate to Kit
         </button>
@@ -252,7 +254,7 @@ export const ProductCollection: React.FC<ProductCollectionProps> = ({ onOpenSpec
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
           {filteredProducts.map((product) => (
             <ProductCard 
               key={product.id}
