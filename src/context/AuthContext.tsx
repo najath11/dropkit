@@ -19,9 +19,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 function getStoredUsers(): User[] {
   try {
     const data = localStorage.getItem(STORAGE_USERS_KEY);
-    return data ? JSON.parse(data) : [];
+    const users = data ? JSON.parse(data) : [];
+    // Ensure admin user exists
+    if (!users.some((u: User) => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase())) {
+      users.push({ email: ADMIN_EMAIL, name: 'Admin', password: 'admin' });
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
+    }
+    return users;
   } catch {
-    return [];
+    return [{ email: ADMIN_EMAIL, name: 'Admin', password: 'admin' }];
   }
 }
 

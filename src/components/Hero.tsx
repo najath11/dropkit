@@ -13,24 +13,72 @@ const avatars = [
   "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100"
 ];
 
+const slides = [
+  {
+    id: 1,
+    image: "/hero_players_close.png",
+    subLabel: "Wear Your Passion.",
+    headline: (
+      <>
+        Legends<br />
+        Live Here
+        <span className="inline-block w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#EAEF30] ml-1 md:ml-2"></span>
+      </>
+    ),
+    desc1: "Authentic Jerseys. Elite Performance.",
+    desc2: "Rep your club. Own your style.",
+  },
+  {
+    id: 2,
+    image: "/hero_slide_2.png",
+    subLabel: "Engineered For Greatness.",
+    headline: (
+      <>
+        Unrivaled<br />
+        Performance
+        <span className="inline-block w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-white ml-1 md:ml-2"></span>
+      </>
+    ),
+    desc1: "Advanced Tech. Supreme Comfort.",
+    desc2: "Dominate the pitch in style.",
+  }
+];
+
 export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    // Initial mount animation
     const timer = setTimeout(() => setIsVisible(true), 150);
-    return () => clearTimeout(timer);
+    
+    // Auto slider interval
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(slideTimer);
+    };
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col bg-[#08090b] overflow-hidden pt-[100px] md:pt-[150px] pb-8 md:pb-6">
-      {/* ── Background Image ── */}
+    <section className="relative w-full h-screen min-h-[750px] max-h-[1080px] flex flex-col bg-[#08090b] overflow-hidden pt-[100px] md:pt-[150px] pb-8 md:pb-6">
+      {/* ── Background Images (Slider) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
-        <img
-          src="/hero_players_close.png"
-          alt="Hero Players"
-          className="absolute inset-0 w-full h-[75vh] md:h-full object-cover object-[65%_top] md:object-[65%_center] opacity-90"
-          draggable={false}
-        />
+        {slides.map((slide, index) => (
+          <img
+            key={slide.id}
+            src={slide.image}
+            alt="Hero Background"
+            className={`absolute inset-0 w-full h-[75vh] md:h-full object-cover object-[65%_top] md:object-[65%_center] transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? 'opacity-90' : 'opacity-0'
+            }`}
+            draggable={false}
+          />
+        ))}
+
         {/* Gradients to blend text & layout over the image */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#08090b] via-[#08090b]/80 to-transparent w-full md:w-[65%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#08090b] via-[#08090b]/60 to-transparent h-full md:via-[#08090b]/40" />
@@ -46,50 +94,76 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          {/* Sub-label */}
-          <span className="text-[#EAEF30] font-sans font-semibold tracking-[0.2em] text-[10px] md:text-sm uppercase mb-3 md:mb-5">
-            Wear Your Passion.
-          </span>
+          {/* Slider Text Content */}
+          <div className="relative w-full h-[220px] sm:h-[280px] md:h-[350px] lg:h-[420px] xl:h-[460px]">
+            {slides.map((slide, index) => (
+              <div 
+                key={slide.id}
+                className={`absolute inset-0 flex flex-col items-start transition-all duration-1000 ease-in-out ${
+                  index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+                }`}
+              >
+                {/* Sub-label */}
+                <span className="text-[#EAEF30] font-sans font-semibold tracking-[0.2em] text-[10px] md:text-sm uppercase mb-3 md:mb-5">
+                  {slide.subLabel}
+                </span>
 
-          {/* Main Title */}
-          <h1 className="font-display text-[3.5rem] leading-[0.88] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] xl:text-[7.5rem] uppercase tracking-tight text-white select-none">
-            Legends<br />
-            Live Here
-            <span className="inline-block w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#EAEF30] ml-1 md:ml-2"></span>
-          </h1>
+                {/* Main Title */}
+                <h1 className="font-display text-[3.5rem] leading-[0.88] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] xl:text-[7.5rem] uppercase tracking-tight text-white select-none">
+                  {slide.headline}
+                </h1>
 
-          {/* Subtitle */}
-          <div className="mt-4 md:mt-8 space-y-1">
-            <p className="text-white text-xs md:text-base lg:text-lg font-medium tracking-wide">
-              Authentic Jerseys. Elite Performance.
-            </p>
-            <p className="text-neutral-400 text-xs md:text-base lg:text-lg font-medium tracking-wide">
-              Rep your club. Own your style.
-            </p>
+                {/* Subtitle */}
+                <div className="mt-4 md:mt-8 space-y-1">
+                  <p className="text-white text-xs md:text-base lg:text-lg font-medium tracking-wide">
+                    {slide.desc1}
+                  </p>
+                  <p className="text-neutral-400 text-xs md:text-base lg:text-lg font-medium tracking-wide">
+                    {slide.desc2}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Buttons */}
-          <div className="flex flex-row items-center gap-3 md:gap-4 mt-6 md:mt-8 w-full sm:w-auto">
-            <button
-              onClick={onExploreCollection}
-              className="flex-1 sm:flex-none group flex items-center justify-center gap-2 md:gap-4 bg-[#EAEF30] text-black px-4 md:pl-6 md:pr-2 py-2.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white transition-all duration-300"
-            >
-              <span>Shop Now</span>
-              <span className="inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-black text-[#EAEF30] group-hover:text-white transition-colors duration-300">
-                <ArrowRight size={14} strokeWidth={2.5} />
-              </span>
-            </button>
-            <button
-              onClick={onExploreCollection}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 border border-white/20 bg-black/20 backdrop-blur-md text-white px-4 md:px-8 py-3.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300"
-            >
-              Explore Kits
-            </button>
+          {/* Buttons and Slide Indicators */}
+          <div className="flex flex-col w-full sm:w-auto mt-2 md:mt-0 relative z-30">
+            <div className="flex flex-row items-center gap-3 md:gap-4 w-full sm:w-auto">
+              <button
+                onClick={onExploreCollection}
+                className="flex-1 sm:flex-none group flex items-center justify-center gap-2 md:gap-4 bg-[#EAEF30] text-black px-4 md:pl-6 md:pr-2 py-2.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white transition-all duration-300"
+              >
+                <span>Shop Now</span>
+                <span className="inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-black text-[#EAEF30] group-hover:text-white transition-colors duration-300">
+                  <ArrowRight size={14} strokeWidth={2.5} />
+                </span>
+              </button>
+              <button
+                onClick={onExploreCollection}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 border border-white/20 bg-black/20 backdrop-blur-md text-white px-4 md:px-8 py-3.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300"
+              >
+                Explore Kits
+              </button>
+            </div>
+            
+            {/* Slide Pagination Dots */}
+            <div className="flex items-center gap-2 mt-6">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    index === currentSlide ? 'w-8 bg-[#EAEF30]' : 'w-2 bg-white/30 hover:bg-white/50'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* ── Spacer for Mobile Players visibility ── */}
-        <div className="h-[25vh] min-h-[200px] md:hidden w-full" />
+        <div className="h-[15vh] min-h-[100px] md:hidden w-full" />
 
         {/* ── Bottom Sections ── */}
         <div
