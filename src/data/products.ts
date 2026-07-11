@@ -169,6 +169,7 @@ export const products: Product[] = [
       { name: 'Crimson Red & White', hex: '#C8102E' }
     ],
     sizes: ['S', 'M', 'L', 'XL'],
-    image: '/assets/jersey_football_liverpool_front.jpg'
+    image: '/assets/jersey_football_liverpool_front.jpg',
+    backImage: '/assets/jersey_football_liverpool_back.jpg'
   }
 ];
