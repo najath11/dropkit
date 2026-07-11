@@ -128,10 +128,10 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
 
           {/* Buttons and Slide Indicators */}
           <div className="flex flex-col w-full sm:w-auto mt-2 md:mt-0 relative z-30">
-            <div className="flex flex-row items-center gap-3 md:gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full sm:w-auto">
               <button
                 onClick={onExploreCollection}
-                className="flex-1 sm:flex-none group flex items-center justify-center gap-2 md:gap-4 bg-[#EAEF30] text-black px-4 md:pl-6 md:pr-2 py-2.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white transition-all duration-300"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 md:gap-4 bg-[#EAEF30] text-black px-4 md:pl-6 md:pr-2 py-3 md:py-2.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white transition-all duration-300"
               >
                 <span>Shop Now</span>
                 <span className="inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-black text-[#EAEF30] group-hover:text-white transition-colors duration-300">
@@ -140,14 +140,14 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
               </button>
               <button
                 onClick={onExploreCollection}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 border border-white/20 bg-black/20 backdrop-blur-md text-white px-4 md:px-8 py-3.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 border border-white/20 bg-black/20 backdrop-blur-md text-white px-4 md:px-8 py-3.5 rounded-full font-bold text-[11px] md:text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300"
               >
                 Explore Kits
               </button>
             </div>
             
             {/* Slide Pagination Dots */}
-            <div className="flex items-center gap-2 mt-6">
+            <div className="flex items-center justify-center sm:justify-start gap-2 mt-6">
               {slides.map((_, index) => (
                 <button
                   key={index}
@@ -163,7 +163,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
         </div>
 
         {/* ── Spacer for Mobile Players visibility ── */}
-        <div className="h-[15vh] min-h-[100px] md:hidden w-full" />
+        <div className="h-[10vh] min-h-[60px] md:hidden w-full" />
 
         {/* ── Bottom Sections ── */}
         <div
@@ -173,8 +173,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
         >
           {/* Trust Badges Container */}
           <div className="w-full bg-[#0d0e12]/80 backdrop-blur-xl border border-white/[0.06] rounded-[24px] md:bg-transparent md:backdrop-blur-none md:border-none md:rounded-none py-5 md:py-0 px-4 md:px-0">
-            <div className="flex flex-row justify-between md:justify-start items-center gap-2 md:gap-12 text-white/80">
-              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left">
+            <div className="flex flex-row flex-wrap justify-between md:justify-start items-center gap-y-4 gap-x-2 md:gap-12 text-white/80">
+              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
                 <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
                   <ShieldCheck className="text-white" size={16} strokeWidth={1.5} />
                 </div>
@@ -184,7 +184,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left">
+              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
                 <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
                   <Wind className="text-white" size={16} strokeWidth={1.5} />
                 </div>
@@ -194,7 +194,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left">
+              <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
                 <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
                   <Shirt className="text-white" size={16} strokeWidth={1.5} />
                 </div>
@@ -207,12 +207,12 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
           </div>
 
           {/* Promo Cards Glass Panel */}
-          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-xl border border-white/[0.06] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-row">
+          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-xl border border-white/[0.06] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col md:flex-row">
             
             {/* Column 1 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-r border-white/[0.06]"
+              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
             >
               <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
                 <img
@@ -240,17 +240,17 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             {/* Column 2 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-r border-white/[0.06]"
+              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
             >
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
+              <div className="flex flex-row md:flex-row items-center gap-3 md:gap-4 w-full">
                 <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl bg-[#EAEF30]/10 flex items-center justify-center shrink-0">
                   <Flame className="text-[#EAEF30]" size={20} />
                 </div>
-                <div className="flex flex-col w-full">
-                  <span className="text-white text-[9px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
+                <div className="flex flex-col w-full text-left">
+                  <span className="text-white text-[10px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
                     Flash Drop
                   </span>
-                  <span className="text-neutral-400 text-[8px] sm:text-[9px] md:text-xs mt-1 md:mt-1.5 leading-tight">
+                  <span className="text-neutral-400 text-[9px] sm:text-[9px] md:text-xs mt-1 leading-tight">
                     Up to 25% off on selected kits.
                   </span>
                 </div>
@@ -258,7 +258,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
               <div className="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
                 <ArrowRight size={18} />
               </div>
-              <div className="md:hidden mt-3 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50">
+              <div className="md:hidden mt-0 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50 shrink-0">
                 <ArrowRight size={12} />
               </div>
             </div>
@@ -266,25 +266,25 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             {/* Column 3 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300"
+              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300"
             >
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
+              <div className="flex flex-row md:flex-row items-center gap-3 md:gap-4 w-full">
                 <div className="flex -space-x-1.5 md:-space-x-2.5 shrink-0 pl-1">
                   {avatars.map((url, i) => (
                     <img
                       key={i}
                       src={url}
                       alt="Athlete"
-                      className="w-7 h-7 md:w-12 md:h-12 rounded-full border border-[#0d0e12] md:border-2 object-cover"
+                      className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-[#0d0e12] md:border-2 object-cover"
                       style={{ zIndex: 4 - i }}
                     />
                   ))}
                 </div>
-                <div className="flex flex-col md:ml-1 w-full">
-                  <span className="text-white text-[9px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
-                    Join 15K+<br className="md:hidden" /> Athletes
+                <div className="flex flex-col ml-2 md:ml-1 w-full text-left">
+                  <span className="text-white text-[10px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
+                    Join 15K+<br className="hidden md:block" /> Athletes
                   </span>
-                  <span className="text-neutral-400 text-[8px] sm:text-[9px] md:text-xs mt-1 md:mt-1.5 leading-tight">
+                  <span className="text-neutral-400 text-[9px] sm:text-[9px] md:text-xs mt-1 leading-tight">
                     Who trust Dropkit.
                   </span>
                 </div>
@@ -292,7 +292,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
               <div className="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
                 <ArrowRight size={18} />
               </div>
-              <div className="md:hidden mt-3 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50">
+              <div className="md:hidden mt-0 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50 shrink-0">
                 <ArrowRight size={12} />
               </div>
             </div>

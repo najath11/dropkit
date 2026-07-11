@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff, LogOut, Shield, ChevronRight } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff, LogOut, Shield, ChevronRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { navigate } from '../utils/router';
 
@@ -12,6 +12,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { user, isAdmin, isLoggedIn, login, signup, logout } = useAuth();
   const [tab, setTab] = useState<'signin' | 'signup'>('signin');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Sign In fields
   const [signinEmail, setSigninEmail] = useState('');
@@ -42,6 +43,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setError('');
     setSuccess('');
 
@@ -50,7 +52,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
+    setIsLoading(true);
     const result = await login(signinEmail.trim(), signinPassword);
+    setIsLoading(false);
+    
     if (result.success) {
       setSuccess('Welcome back!');
       resetFields();
@@ -61,6 +66,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setError('');
     setSuccess('');
 
@@ -79,7 +85,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
+    setIsLoading(true);
     const result = await signup(signupName.trim(), signupEmail.trim(), signupPassword);
+    setIsLoading(false);
+
     if (result.success) {
       setSuccess('Account created successfully!');
       resetFields();
@@ -272,9 +281,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer rounded-lg font-sans"
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center h-10 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-90 disabled:opacity-70 transition-all cursor-pointer rounded-lg font-sans"
                   >
-                    Sign In
+                    {isLoading ? <Loader2 size={16} className="animate-spin" /> : 'Sign In'}
                   </button>
 
                   <p className="text-center text-[10px] text-neutral-500">
@@ -359,9 +369,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer rounded-lg font-sans"
+                    disabled={isLoading}
+                    className="w-full flex items-center justify-center h-10 bg-[#EAEF30] text-black text-xs font-bold uppercase tracking-wider hover:opacity-90 disabled:opacity-70 transition-all cursor-pointer rounded-lg font-sans"
                   >
-                    Create Account
+                    {isLoading ? <Loader2 size={16} className="animate-spin" /> : 'Create Account'}
                   </button>
 
                   <p className="text-center text-[10px] text-neutral-500">
