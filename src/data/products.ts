@@ -171,5 +171,35 @@ export const products: Product[] = [
     sizes: ['S', 'M', 'L', 'XL'],
     image: '/assets/jersey_football_liverpool_front.jpg',
     backImage: '/assets/jersey_football_liverpool_back.jpg'
+  },
+  {
+    id: 'js-07',
+    name: 'PSG 23/24 HOME KIT',
+    codename: 'Paris Mbappé Edition',
+    price: 215,
+    category: 'club',
+    description: 'A striking Parisian masterpiece featuring bold diagonal brushstroke graphics in deep navy and crimson. Engineered with Dri-FIT ADV technology for elite match performance and paired with the iconic #7 Mbappé print.',
+    details: [
+      'Dynamic diagonal brushstroke pattern in crimson red',
+      'Dri-FIT ADV moisture-wicking technology',
+      'Heat-applied club crest and sponsor logos',
+      'Ribbed red-and-white contrast collar and cuffs',
+      'Mbappé #7 heat-pressed lettering on the back'
+    ],
+    fabric: {
+      composition: '100% Recycled Polyester fibers',
+      weight: '112 gsm',
+      origin: 'Paris, France',
+      features: ['Dri-FIT ADV Evaporation', 'Anti-cling Mesh Zones', 'Seamless Bonded Side Panels'],
+      dragCoef: '0.318 CdA',
+      reclaimedPercentage: '90%'
+    },
+    colors: [
+      { name: 'Midnight Navy & Crimson', hex: '#0E1A2D' },
+      { name: 'Parisian White & Red', hex: '#F0F0F0' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    image: '/assets/jersey_football_psg_front.png',
+    backImage: '/assets/jersey_football_psg_back.png'
   }
 ];

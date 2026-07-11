@@ -17,6 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   const [size, setSize] = useState<string>(product.sizes[0] || 'M');
   const [color, setColor] = useState<string>(product.colors[0]?.name || '');
   const [activeSide, setActiveSide] = useState<'front' | 'back'>('front');
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!product.backImage) return;
@@ -30,25 +31,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
 
   return (
     <div
-      className="group flex flex-col border border-white/5 bg-white/5 p-3 sm:p-5 hover:shadow-2xl hover:border-white/20 transition-all duration-300 rounded-[20px] sm:rounded-[24px] backdrop-blur-md"
+      className={`group flex flex-col border bg-white/5 hover:shadow-2xl transition-all duration-300 backdrop-blur-md cursor-pointer
+        ${expanded ? 'border-[#EAEF30]/30 bg-white/8 shadow-xl shadow-[#EAEF30]/5' : 'border-white/5 hover:border-white/20'}
+        p-2 sm:p-5 rounded-2xl sm:rounded-[24px]`}
+      onClick={() => {
+        if (window.innerWidth < 640) setExpanded(!expanded);
+      }}
     >
-      {/* Product Header */}
-      <div className="flex justify-between items-start mb-3 sm:mb-4">
-        <div>
-          <h3 className="font-sans font-black uppercase text-sm sm:text-base tracking-tight text-white group-hover:text-[#EAEF30] transition-colors duration-150">
-            {product.name}
-          </h3>
-          <p className="font-mono text-[9px] sm:text-[10px] text-neutral-400 italic mt-0.5">
-            {product.codename}
-          </p>
-        </div>
-        <div className="font-mono text-xs sm:text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">
-          ₹{product.price}
-        </div>
-      </div>
-
-      {/* Product Image Panel */}
-      <div className="aspect-[3/4] bg-[#080b12] relative overflow-hidden mb-6 border border-white/5 group/img rounded-xl">
+      {/* Product Image Panel — always visible */}
+      <div className="aspect-[3/4] bg-[#080b12] relative overflow-hidden border border-white/5 group/img rounded-xl sm:mb-4">
         <img
           src={product.image}
           alt={`${product.name} Front`}
@@ -100,63 +91,110 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
             </button>
           </div>
         )}
+
+        {/* "Tap to view" hint on mobile — only when collapsed */}
+        {!expanded && (
+          <div className="sm:hidden absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 pointer-events-none">
+            <span className="font-mono text-[8px] uppercase tracking-widest text-white/60 flex items-center justify-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+              Tap for details
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Description */}
-      <p className="hidden sm:block text-neutral-300 text-xs leading-relaxed mb-4 sm:mb-6 flex-grow">
+      {/* Product Name & Price — always visible */}
+      <div className="flex justify-between items-start mt-2 sm:mb-2">
+        <h3 className="font-sans font-black uppercase text-[11px] sm:text-base tracking-tight text-white group-hover:text-[#EAEF30] transition-colors duration-150 leading-tight">
+          {product.name}
+        </h3>
+        <div className="font-mono text-[10px] sm:text-sm font-bold text-[#EAEF30] bg-white/5 border border-white/10 px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap ml-1.5 shrink-0">
+          ₹{product.price}
+        </div>
+      </div>
+
+      {/* Codename — hidden on mobile unless expanded, always on desktop */}
+      <p className={`font-mono text-[9px] sm:text-[10px] text-neutral-400 italic mt-0.5 ${expanded ? 'block' : 'hidden sm:block'}`}>
+        {product.codename}
+      </p>
+
+      {/* Description — hidden on mobile, shown on desktop */}
+      <p className="hidden sm:block text-neutral-300 text-xs leading-relaxed mb-4 sm:mb-6 flex-grow mt-3">
         {product.description}
       </p>
 
-      {/* Swatch & Size Selectors */}
-      <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
+      {/* === Expandable Details Section === */}
+      {/* On desktop (sm+): always visible. On mobile: only when expanded */}
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden
+          ${expanded ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 sm:max-h-[500px] sm:opacity-100 sm:mt-0'}`}
+      >
+        {/* Mobile description */}
+        <p className="sm:hidden text-neutral-300 text-[10px] leading-relaxed mb-3">
+          {product.description}
+        </p>
 
-        {/* Color Swatch */}
-        <div>
-          <div className="flex items-center space-x-1.5">
-            {product.colors.map((c) => (
-              <button
-                key={c.name}
-                onClick={() => setColor(c.name)}
-                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${color === c.name ? 'border-white scale-110' : 'border-transparent'
-                  }`}
-                title={c.name}
-              >
-                <span
-                  className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-white/10"
-                  style={{ backgroundColor: c.hex }}
-                ></span>
-              </button>
-            ))}
+        <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
+
+          {/* Color Swatch */}
+          <div>
+            <div className="flex items-center space-x-1.5">
+              {product.colors.map((c) => (
+                <button
+                  key={c.name}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setColor(c.name);
+                  }}
+                  className={`w-5 h-5 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${color === c.name ? 'border-white scale-110' : 'border-transparent'
+                    }`}
+                  title={c.name}
+                >
+                  <span
+                    className="w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 rounded-full border border-white/10"
+                    style={{ backgroundColor: c.hex }}
+                  ></span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Size Selector */}
-        <div>
-          <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-neutral-400">Select Size</span>
-          <div className="flex flex-wrap gap-1 mt-1 sm:mt-1.5">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSize(s)}
-                className={`w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center font-mono text-[8px] sm:text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${size === s
-                    ? 'bg-white text-black border-white font-semibold'
-                    : 'bg-transparent text-white border-white/10 hover:border-white/30'
-                  }`}
-              >
-                {s}
-              </button>
-            ))}
+          {/* Size Selector */}
+          <div>
+            <span className="font-mono text-[9px] sm:text-[9px] uppercase tracking-wider text-neutral-400">Select Size</span>
+            <div className="flex flex-wrap gap-1.5 mt-1.5 sm:mt-1.5">
+              {product.sizes.map((s) => (
+                <button
+                  key={s}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSize(s);
+                  }}
+                  className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center font-mono text-[9px] sm:text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${size === s
+                      ? 'bg-white text-black border-white font-semibold'
+                      : 'bg-transparent text-white border-white/10 hover:border-white/30'
+                    }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Add to Cart CTA */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product, size, color);
+            }}
+            className="w-full py-2.5 sm:py-3 bg-[#EAEF30] text-black border border-transparent text-[11px] sm:text-xs font-bold tracking-wider uppercase hover:bg-transparent hover:text-[#EAEF30] hover:border-[#EAEF30] transition-all duration-200 cursor-pointer rounded-lg shadow-md"
+          >
+            Allocate to Kit
+          </button>
+
         </div>
-
-        {/* Add to Cart CTA */}
-        <button
-          onClick={() => addToCart(product, size, color)}
-          className="w-full py-2 sm:py-3 bg-[#EAEF30] text-black border border-transparent text-[10px] sm:text-xs font-bold tracking-wider uppercase hover:bg-transparent hover:text-[#EAEF30] hover:border-[#EAEF30] transition-all duration-200 cursor-pointer rounded-lg shadow-md"
-        >
-          Allocate to Kit
-        </button>
-
       </div>
     </div>
   );
