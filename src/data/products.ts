@@ -3,7 +3,7 @@ import type { Product } from '../types';
 export const products: Product[] = [
   {
     id: 'js-01',
-    name: 'AÉRO / ARCHIVE FC-01',
+    name: 'MADRID 24/25 HOME KIT',
     codename: 'Madrid Club Edition',
     price: 195,
     category: 'club',
@@ -33,7 +33,7 @@ export const products: Product[] = [
   },
   {
     id: 'js-02',
-    name: 'AÉRO / ARCHIVE INT-02',
+    name: 'ARGENTINA 24/25 HOME KIT',
     codename: 'Argentina World Cup Edition',
     price: 220,
     category: 'intl',
@@ -62,7 +62,7 @@ export const products: Product[] = [
   },
   {
     id: 'js-03',
-    name: 'AÉRO / ARCHIVE FC-03',
+    name: 'MILAN 24/25 HOME KIT',
     codename: 'Milano Club Edition',
     price: 185,
     category: 'club',
@@ -90,7 +90,7 @@ export const products: Product[] = [
   },
   {
     id: 'js-04',
-    name: 'AÉRO / ARCHIVE INT-04',
+    name: 'MOROCCO 24/25 HOME KIT',
     codename: 'Morocco Cup Edition',
     price: 210,
     category: 'intl',
@@ -118,7 +118,7 @@ export const products: Product[] = [
   },
   {
     id: 'js-05',
-    name: 'AÉRO / ARCHIVE FC-04',
+    name: 'BARCELONA 24/25 HOME KIT',
     codename: 'Barcelona Blaugrana Edition',
     price: 205,
     category: 'club',
@@ -146,7 +146,7 @@ export const products: Product[] = [
   },
   {
     id: 'js-06',
-    name: 'AÉRO / ARCHIVE FC-05',
+    name: 'LIVERPOOL 24/25 HOME KIT',
     codename: 'Liverpool Crimson Edition',
     price: 190,
     category: 'club',
