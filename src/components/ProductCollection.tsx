@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         <img
           src={product.image}
           alt={`${product.name} Front`}
-          className={`absolute inset-0 object-cover w-full h-full filter grayscale group-hover:grayscale-0 contrast-105 transition-all duration-700 ease-in-out ${
+          className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${
             activeSide === 'back' ? 'opacity-0 scale-[1.05]' : 'opacity-100 scale-100 group-hover:scale-[1.03]'
           }`}
           onError={(e) => {
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
           <img
             src={product.backImage}
             alt={`${product.name} Back`}
-            className={`absolute inset-0 object-cover w-full h-full filter grayscale group-hover:grayscale-0 contrast-105 transition-all duration-700 ease-in-out ${
+            className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${
               activeSide === 'back' ? 'opacity-100 scale-100 group-hover:scale-[1.03]' : 'opacity-0 scale-[0.95]'
             }`}
             onError={(e) => {
