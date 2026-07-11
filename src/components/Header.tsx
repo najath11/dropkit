@@ -8,7 +8,7 @@ interface HeaderProps {
   onOpenCollection: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenSpecs, onOpenCollection }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenCollection }) => {
   const { cartCount, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

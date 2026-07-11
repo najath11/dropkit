@@ -178,7 +178,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   );
 };
 
-export const ProductCollection: React.FC<ProductCollectionProps> = ({ onOpenSpecs, onOpenSizeGuide }) => {
+export const ProductCollection: React.FC<ProductCollectionProps> = () => {
   const { addToCart } = useCart();
   const [filter, setFilter] = useState<'all' | 'club' | 'intl'>('all');
 
