@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 
 import { ProductCollection } from './components/ProductCollection';
 import { TrustAndFaq } from './components/TrustAndFaq';
+import { CommunityGallery } from './components/CommunityGallery';
 import { SizeGuide } from './components/SizeGuide';
 import { EarlyAccess } from './components/EarlyAccess';
 import { CartDrawer } from './components/CartDrawer';
@@ -44,6 +45,8 @@ function MainApp() {
         />
         
         <TrustAndFaq />
+        
+        <CommunityGallery />
         
         <SizeGuide />
         
