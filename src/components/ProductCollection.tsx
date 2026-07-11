@@ -23,13 +23,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
 
     const interval = setInterval(() => {
       setActiveSide((prev) => (prev === 'front' ? 'back' : 'front'));
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [product.backImage]);
 
   return (
-    <div 
+    <div
       className="group flex flex-col border border-white/5 bg-white/5 p-3 sm:p-5 hover:shadow-2xl hover:border-white/20 transition-all duration-300 rounded-[20px] sm:rounded-[24px] backdrop-blur-md"
     >
       {/* Product Header */}
@@ -52,27 +52,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         <img
           src={product.image}
           alt={`${product.name} Front`}
-          className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${
-            activeSide === 'back' ? 'opacity-0 scale-[1.05]' : 'opacity-100 scale-100 group-hover:scale-[1.03]'
-          }`}
+          className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${activeSide === 'back' ? 'opacity-0 scale-[1.05]' : 'opacity-100 scale-100 group-hover:scale-[1.03]'
+            }`}
           onError={(e) => {
             e.currentTarget.src = 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800';
           }}
         />
-        
+
         {product.backImage && (
           <img
             src={product.backImage}
             alt={`${product.name} Back`}
-            className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${
-              activeSide === 'back' ? 'opacity-100 scale-100 group-hover:scale-[1.03]' : 'opacity-0 scale-[0.95]'
-            }`}
+            className={`absolute inset-0 object-cover w-full h-full contrast-105 transition-all duration-700 ease-in-out ${activeSide === 'back' ? 'opacity-100 scale-100 group-hover:scale-[1.03]' : 'opacity-0 scale-[0.95]'
+              }`}
             onError={(e) => {
               e.currentTarget.src = 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800';
             }}
           />
         )}
-        
+
         {/* Front/Back Manual Toggle Overlay */}
         {product.backImage && (
           <div className="absolute bottom-3 right-3 flex items-center space-x-1 bg-black/60 backdrop-blur-md border border-white/10 p-0.5 rounded-md z-10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-200">
@@ -81,11 +79,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
                 e.stopPropagation();
                 setActiveSide('front');
               }}
-              className={`px-2 py-0.5 text-[9px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${
-                activeSide === 'front' 
-                  ? 'bg-white text-black font-semibold rounded-md' 
+              className={`px-2 py-0.5 text-[9px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${activeSide === 'front'
+                  ? 'bg-white text-black font-semibold rounded-md'
                   : 'text-neutral-400 hover:text-white'
-              }`}
+                }`}
             >
               Front
             </button>
@@ -94,11 +91,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
                 e.stopPropagation();
                 setActiveSide('back');
               }}
-              className={`px-2 py-0.5 text-[9px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${
-                activeSide === 'back' 
-                  ? 'bg-white text-black font-semibold rounded-md' 
+              className={`px-2 py-0.5 text-[9px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${activeSide === 'back'
+                  ? 'bg-white text-black font-semibold rounded-md'
                   : 'text-neutral-400 hover:text-white'
-              }`}
+                }`}
             >
               Back
             </button>
@@ -113,7 +109,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
 
       {/* Swatch & Size Selectors */}
       <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10">
-        
+
         {/* Color Swatch */}
         <div>
           <div className="flex items-center space-x-1.5">
@@ -121,13 +117,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
               <button
                 key={c.name}
                 onClick={() => setColor(c.name)}
-                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${
-                  color === c.name ? 'border-white scale-110' : 'border-transparent'
-                }`}
+                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center cursor-pointer transition-transform duration-100 ${color === c.name ? 'border-white scale-110' : 'border-transparent'
+                  }`}
                 title={c.name}
               >
-                <span 
-                  className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-white/10" 
+                <span
+                  className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-white/10"
                   style={{ backgroundColor: c.hex }}
                 ></span>
               </button>
@@ -143,11 +138,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className={`w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center font-mono text-[8px] sm:text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${
-                  size === s 
-                    ? 'bg-white text-black border-white font-semibold' 
+                className={`w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center font-mono text-[8px] sm:text-[10px] border transition-all duration-100 cursor-pointer rounded-md ${size === s
+                    ? 'bg-white text-black border-white font-semibold'
                     : 'bg-transparent text-white border-white/10 hover:border-white/30'
-                }`}
+                  }`}
               >
                 {s}
               </button>
@@ -162,7 +156,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         >
           Allocate to Kit
         </button>
-        
+
       </div>
     </div>
   );
@@ -181,7 +175,7 @@ export const ProductCollection: React.FC<ProductCollectionProps> = () => {
     <section id="collection" className="w-full max-w-[1400px] mx-auto rounded-[32px] md:rounded-[40px] bg-mesh-dark border border-white/10 shadow-2xl p-6 sm:p-8 md:p-12 lg:p-16 relative overflow-hidden text-white">
       {/* subtle spotlight gradient background overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_60%)] pointer-events-none" />
-      
+
       <div className="relative z-10 w-full">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -191,30 +185,27 @@ export const ProductCollection: React.FC<ProductCollectionProps> = () => {
               The Pitch & Legacy Suite
             </h2>
           </div>
-          
+
           {/* Category Filters */}
           <div className="flex items-center space-x-1 border border-white/10 p-1 bg-white/5 rounded-full self-start md:self-auto backdrop-blur-md">
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${
-                filter === 'all' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${filter === 'all' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
+                }`}
             >
               All Kits
             </button>
             <button
               onClick={() => setFilter('club')}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${
-                filter === 'club' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${filter === 'club' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
+                }`}
             >
               Club Editions
             </button>
             <button
               onClick={() => setFilter('intl')}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${
-                filter === 'intl' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-tight transition-all duration-150 cursor-pointer ${filter === 'intl' ? 'bg-white text-black font-bold' : 'text-neutral-400 hover:text-white'
+                }`}
             >
               World Cup
             </button>
@@ -224,7 +215,7 @@ export const ProductCollection: React.FC<ProductCollectionProps> = () => {
         {/* Products Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
           {filteredProducts.map((product) => (
-            <ProductCard 
+            <ProductCard
               key={product.id}
               product={product}
               addToCart={addToCart}
