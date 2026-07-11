@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import type { Product } from '../types';
@@ -18,17 +18,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   const [color, setColor] = useState<string>(product.colors[0]?.name || '');
   const [activeSide, setActiveSide] = useState<'front' | 'back'>('front');
 
+  useEffect(() => {
+    if (!product.backImage) return;
+
+    const interval = setInterval(() => {
+      setActiveSide((prev) => (prev === 'front' ? 'back' : 'front'));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [product.backImage]);
+
   return (
     <div 
       className="group flex flex-col border border-white/5 bg-white/5 p-3 sm:p-5 hover:shadow-2xl hover:border-white/20 transition-all duration-300 rounded-[20px] sm:rounded-[24px] backdrop-blur-md"
-      onMouseEnter={() => {
-        if (product.backImage) {
-          setActiveSide('back');
-        }
-      }}
-      onMouseLeave={() => {
-        setActiveSide('front');
-      }}
     >
       {/* Product Header */}
       <div className="flex justify-between items-start mb-3 sm:mb-4">
