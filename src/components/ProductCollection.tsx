@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         ${expanded ? 'border-[#EAEF30]/30 bg-white/8 shadow-xl shadow-[#EAEF30]/5' : 'border-white/5 hover:border-white/20'}
         p-2 sm:p-5 rounded-2xl sm:rounded-[24px]`}
       onClick={() => {
-        if (window.innerWidth < 640) setExpanded(!expanded);
+        setExpanded(!expanded);
       }}
     >
       {/* Product Image Panel — always visible */}
@@ -92,14 +92,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
           </div>
         )}
 
-        {/* "Tap to view" hint on mobile — only when collapsed */}
+        {/* Hint overlay — always visible when collapsed */}
         {!expanded && (
-          <div className="sm:hidden absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 pointer-events-none">
-            <span className="font-mono text-[8px] uppercase tracking-widest text-white/60 flex items-center justify-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 pointer-events-none">
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-white/60 flex items-center justify-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
-              Tap for details
+              View details
             </span>
           </div>
         )}
@@ -115,24 +115,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
         </div>
       </div>
 
-      {/* Codename — hidden on mobile unless expanded, always on desktop */}
-      <p className={`font-mono text-[9px] sm:text-[10px] text-neutral-400 italic mt-0.5 ${expanded ? 'block' : 'hidden sm:block'}`}>
+      {/* Codename — hidden unless expanded */}
+      <p className={`font-mono text-[9px] sm:text-[10px] text-neutral-400 italic mt-0.5 ${expanded ? 'block' : 'hidden'}`}>
         {product.codename}
       </p>
 
-      {/* Description — hidden on mobile, shown on desktop */}
-      <p className="hidden sm:block text-neutral-300 text-xs leading-relaxed mb-4 sm:mb-6 flex-grow mt-3">
-        {product.description}
-      </p>
-
       {/* === Expandable Details Section === */}
-      {/* On desktop (sm+): always visible. On mobile: only when expanded */}
+      {/* Controlled by expanded state on both mobile and desktop */}
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden
-          ${expanded ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 sm:max-h-[500px] sm:opacity-100 sm:mt-0'}`}
+          ${expanded ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
       >
-        {/* Mobile description */}
-        <p className="sm:hidden text-neutral-300 text-[10px] leading-relaxed mb-3">
+        {/* Description */}
+        <p className="text-neutral-300 text-[10px] sm:text-xs leading-relaxed mb-3 sm:mb-4">
           {product.description}
         </p>
 

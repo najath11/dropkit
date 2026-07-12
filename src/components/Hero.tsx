@@ -41,6 +41,20 @@ const slides = [
     ),
     desc1: "Advanced Tech. Supreme Comfort.",
     desc2: "Dominate the pitch in style.",
+  },
+  {
+    id: 3,
+    image: "/hero_slide_3.png",
+    subLabel: "Champions Choice.",
+    headline: (
+      <>
+        Wear The<br />
+        Glory
+        <span className="inline-block w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#EAEF30] ml-1 md:ml-2"></span>
+      </>
+    ),
+    desc1: "Premium Quality. Iconic Designs.",
+    desc2: "Elevate your game. Represent your crest.",
   }
 ];
 
@@ -64,7 +78,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen min-h-[750px] max-h-[1080px] flex flex-col bg-[#08090b] overflow-hidden pt-[100px] md:pt-[150px] pb-8 md:pb-6">
+    <section className="relative w-full h-full flex flex-col bg-[#08090b] overflow-hidden pt-14 md:pt-16 pb-2 md:pb-4 flex-grow flex-1 min-h-0">
       {/* ── Background Images (Slider) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none">
         {slides.map((slide, index) => (
@@ -72,8 +86,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             key={slide.id}
             src={slide.image}
             alt="Hero Background"
-            className={`absolute inset-0 w-full h-[75vh] md:h-full object-cover object-[65%_top] md:object-[65%_center] transition-opacity duration-1000 ease-in-out ${
-              index === currentSlide ? 'opacity-90' : 'opacity-0'
+            className={`absolute inset-0 w-full h-full object-cover object-[65%_top] md:object-[65%_center] transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? 'opacity-90 z-10' : 'opacity-0 z-0 invisible'
             }`}
             draggable={false}
           />
@@ -95,26 +109,26 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
           }`}
         >
           {/* Slider Text Content */}
-          <div className="relative w-full h-[220px] sm:h-[280px] md:h-[350px] lg:h-[420px] xl:h-[460px]">
+          <div className="relative w-full h-[150px] sm:h-[200px] md:h-[250px] lg:h-[280px] xl:h-[320px]">
             {slides.map((slide, index) => (
               <div 
                 key={slide.id}
                 className={`absolute inset-0 flex flex-col items-start transition-all duration-1000 ease-in-out ${
-                  index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+                  index === currentSlide ? 'opacity-100 translate-y-0 z-10' : 'opacity-0 translate-y-8 pointer-events-none invisible z-0'
                 }`}
               >
                 {/* Sub-label */}
-                <span className="text-[#EAEF30] font-sans font-semibold tracking-[0.2em] text-[10px] md:text-sm uppercase mb-3 md:mb-5">
+                <span className="text-[#EAEF30] font-sans font-semibold tracking-[0.2em] text-[10px] md:text-sm uppercase mb-2 md:mb-3">
                   {slide.subLabel}
                 </span>
 
                 {/* Main Title */}
-                <h1 className="font-display text-[3.5rem] leading-[0.88] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] xl:text-[7.5rem] uppercase tracking-tight text-white select-none">
+                <h1 className="font-display text-[2.8rem] leading-[0.88] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] xl:text-[6.5rem] uppercase tracking-tight text-white select-none">
                   {slide.headline}
                 </h1>
 
                 {/* Subtitle */}
-                <div className="mt-4 md:mt-8 space-y-1">
+                <div className="mt-3 md:mt-4 space-y-1">
                   <p className="text-white text-xs md:text-base lg:text-lg font-medium tracking-wide">
                     {slide.desc1}
                   </p>
@@ -147,7 +161,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             </div>
             
             {/* Slide Pagination Dots */}
-            <div className="flex items-center justify-center sm:justify-start gap-2 mt-6">
+            <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
               {slides.map((_, index) => (
                 <button
                   key={index}
@@ -167,16 +181,16 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
 
         {/* ── Bottom Sections ── */}
         <div
-          className={`mt-auto w-full flex flex-col gap-4 md:gap-8 transition-all duration-[1200ms] delay-300 ease-out z-20 relative ${
+          className={`mt-auto w-full flex flex-col gap-3 md:gap-4 transition-all duration-[1200ms] delay-300 ease-out z-20 relative ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           {/* Trust Badges Container */}
-          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-md border border-white/[0.06] rounded-[24px] md:bg-transparent md:backdrop-blur-none md:border-none md:rounded-none py-5 md:py-0 px-4 md:px-0">
-            <div className="flex flex-row flex-wrap justify-between md:justify-start items-center gap-y-4 gap-x-2 md:gap-12 text-white/80">
+          <div className="w-full bg-[#0d0e12]/80 backdrop-blur-md border border-white/[0.06] rounded-[24px] md:bg-transparent md:backdrop-blur-none md:border-none md:rounded-none py-4 md:py-0 px-4 md:px-0">
+            <div className="flex flex-row flex-wrap justify-between md:justify-start items-center gap-y-3 gap-x-2 md:gap-12 text-white/80">
               <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="text-white" size={16} strokeWidth={1.5} />
+                <div className="w-7 h-7 md:w-9 md:h-9 rounded-full border border-white/15 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="text-white" size={14} strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col leading-tight">
                   <span className="text-white text-[9px] md:text-xs font-bold uppercase tracking-wider">Authentic</span>
@@ -185,8 +199,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
               </div>
 
               <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
-                  <Wind className="text-white" size={16} strokeWidth={1.5} />
+                <div className="w-7 h-7 md:w-9 md:h-9 rounded-full border border-white/15 flex items-center justify-center shrink-0">
+                  <Wind className="text-white" size={14} strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col leading-tight">
                   <span className="text-white text-[9px] md:text-xs font-bold uppercase tracking-wider">Performance</span>
@@ -195,8 +209,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
               </div>
 
               <div className="flex items-center gap-2 md:gap-3 flex-col md:flex-row text-center md:text-left flex-1 min-w-[30%]">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
-                  <Shirt className="text-white" size={16} strokeWidth={1.5} />
+                <div className="w-7 h-7 md:w-9 md:h-9 rounded-full border border-white/15 flex items-center justify-center shrink-0">
+                  <Shirt className="text-white" size={14} strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col leading-tight">
                   <span className="text-white text-[9px] md:text-xs font-bold uppercase tracking-wider">Exclusive</span>
@@ -212,25 +226,25 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             {/* Column 1 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
+              className="group flex-1 flex flex-row items-center justify-between p-3 md:py-3.5 md:px-5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
             >
               <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
                 <img
                   src="/new_season_card.png"
                   alt="New Season"
-                  className="w-10 h-10 md:w-16 md:h-16 rounded-xl object-cover shrink-0 border border-white/10 shadow-lg"
+                  className="w-9 h-9 md:w-12 md:h-12 rounded-xl object-cover shrink-0 border border-white/10 shadow-lg"
                 />
                 <div className="flex flex-col w-full">
                   <span className="text-white text-[9px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
                     New Season.<br className="md:hidden" /> New Kits.
                   </span>
-                  <span className="text-neutral-400 text-[8px] sm:text-[9px] md:text-xs mt-1 md:mt-1.5 leading-tight">
+                  <span className="text-neutral-400 text-[8px] sm:text-[9px] md:text-xs mt-1 leading-tight">
                     Discover the 24/25 collection.
                   </span>
                 </div>
               </div>
-              <div className="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
-                <ArrowRight size={18} />
+              <div className="hidden md:flex w-8 h-8 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
+                <ArrowRight size={14} />
               </div>
               <div className="md:hidden mt-3 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50">
                 <ArrowRight size={12} />
@@ -240,11 +254,11 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             {/* Column 2 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
+              className="group flex-1 flex flex-row items-center justify-between p-3 md:py-3.5 md:px-5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300 border-b md:border-b-0 md:border-r border-white/[0.06]"
             >
               <div className="flex flex-row md:flex-row items-center gap-3 md:gap-4 w-full">
-                <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl bg-[#EAEF30]/10 flex items-center justify-center shrink-0">
-                  <Flame className="text-[#EAEF30]" size={20} />
+                <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-[#EAEF30]/10 flex items-center justify-center shrink-0">
+                  <Flame className="text-[#EAEF30]" size={16} />
                 </div>
                 <div className="flex flex-col w-full text-left">
                   <span className="text-white text-[10px] sm:text-[10px] md:text-sm font-bold uppercase tracking-wider leading-tight">
@@ -255,8 +269,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
                   </span>
                 </div>
               </div>
-              <div className="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
-                <ArrowRight size={18} />
+              <div className="hidden md:flex w-8 h-8 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
+                <ArrowRight size={14} />
               </div>
               <div className="md:hidden mt-0 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50 shrink-0">
                 <ArrowRight size={12} />
@@ -266,16 +280,16 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
             {/* Column 3 */}
             <div
               onClick={onExploreCollection}
-              className="group flex-1 flex flex-row items-center justify-between p-4 md:p-6 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300"
+              className="group flex-1 flex flex-row items-center justify-between p-3 md:py-3.5 md:px-5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-300"
             >
               <div className="flex flex-row md:flex-row items-center gap-3 md:gap-4 w-full">
-                <div className="flex -space-x-1.5 md:-space-x-2.5 shrink-0 pl-1">
+                <div className="flex -space-x-1.5 md:-space-x-2 shrink-0 pl-1">
                   {avatars.map((url, i) => (
                     <img
                       key={i}
                       src={url}
                       alt="Athlete"
-                      className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-[#0d0e12] md:border-2 object-cover"
+                      className="w-7 h-7 md:w-9 md:h-9 rounded-full border border-[#0d0e12] md:border-2 object-cover"
                       style={{ zIndex: 4 - i }}
                     />
                   ))}
@@ -289,8 +303,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollection }) => {
                   </span>
                 </div>
               </div>
-              <div className="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
-                <ArrowRight size={18} />
+              <div className="hidden md:flex w-8 h-8 rounded-full border border-white/10 items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/30 transition-all duration-300 shrink-0">
+                <ArrowRight size={14} />
               </div>
               <div className="md:hidden mt-0 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-white/50 shrink-0">
                 <ArrowRight size={12} />
